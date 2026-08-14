@@ -70,7 +70,9 @@
    3. --fmn-blue-deep är den enda blå som får bära text.
    4. Bottenfärgen är aldrig ren vit. Ljuset i paletten ska
       komma från blomman, inte från pappret.
-   5. Högst en av bud/eye syns åt gången i samma vy.
+   5. Knoppen (--fmn-bud) markerar ett enda tillstånd i produkten:
+      utgången spärr. Den används inte till något annat.
+      Märket är undantaget från regeln — ögat sitter alltid i logotypen.
 
    KONTRAST (mot --fmn-ground)
    --fmn-ink        16.1:1   allt
