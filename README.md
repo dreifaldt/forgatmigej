@@ -14,6 +14,7 @@ Varumärke och prototyp. Statisk sajt, inga beroenden, ingen build.
 | `404.html` | Felsida. |
 | `assets/tokens.css` | **Enda stället där färgvärden bor.** Ändra här, aldrig i sidorna. |
 | `assets/favicon.svg` | Märket. |
+| `CNAME` | Domänen Pages ska svara på. |
 
 ## Kör lokalt
 
@@ -42,9 +43,27 @@ Därefter på github.com:
 
 Sajten dyker upp på `https://DITT-NAMN.github.io/forgatmigej/` efter en minut eller två.
 
-### Eget domännamn senare
+### Domän
 
-Lägg en fil `CNAME` i roten med domänen som enda innehåll, peka DNS mot GitHub, och kryssa i *Enforce HTTPS*.
+Sajten ska ligga på **forgatmigej.dreifaldt.com**. Filen `CNAME` i roten är redan ifylld.
+
+1. Hos DNS-leverantören för `dreifaldt.com`: skapa en **CNAME-post** `forgatmigej` som pekar på `DITT-NAMN.github.io` (utan reponamnet).
+2. **Settings → Pages → Custom domain** → `forgatmigej.dreifaldt.com` → Save.
+3. Vänta tills DNS-kontrollen blir grön, kryssa sedan i **Enforce HTTPS**.
+4. Verifiera domänen under **Settings → Pages → Verified domains**. Det hindrar någon annan från att kapa subdomänen om den någon gång slutar peka hit.
+
+#### Varför inte förgätmigej.dreifaldt.com
+
+GitHub Pages kräver punycode för internationaliserade domännamn. Adressen hade blivit
+`xn--frgtmigej-x2a9q.dreifaldt.com` i CNAME-filen, i TLS-certifikatet, i loggarna och i statistiken.
+Namnet stavas med ä och ö överallt där det syns — i märket, i titeln, i rubrikerna. Adressen är rörmokeri.
+
+### Sökvägar till assets
+
+`index.html` och `brand.html` använder relativa sökvägar (`assets/...`) och fungerar både på
+projektadressen och på egen domän. `404.html` använder rotabsoluta (`/assets/...`) eftersom Pages
+serverar den för godtyckliga sökvägar — relativa skulle bryta på djupet. Följden: 404-sidan är
+ostilad tills egen domän är på plats.
 
 ### Varför `.nojekyll`
 
