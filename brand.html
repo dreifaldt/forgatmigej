@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Förgätmigej — palett</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/tokens.css">
+<style>
+:root{
+  /* Färgvärdena bor i assets/tokens.css */
+  --line:1px solid rgba(28,36,32,.12);
+  --serif:"Fraunces",Georgia,serif;
+  --sans:"Karla","Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fmn-ground);color:var(--fmn-ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:900px;margin:0 auto;padding:0 24px 80px}
+
+.head{padding:56px 0 0}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--fmn-stem);margin:0 0 18px}
+h1{font-family:var(--serif);font-weight:300;font-size:clamp(32px,5.5vw,50px);line-height:1.05;letter-spacing:-.015em;margin:0}
+h1 em{font-style:italic;font-weight:400;color:var(--fmn-blue-deep)}
+.lede{max-width:46ch;color:var(--fmn-stem);margin:24px 0 0}
+
+/* --- botanisk plansch --- */
+.plate{display:grid;grid-template-columns:300px 1fr;gap:44px;align-items:center;margin:64px 0 0;padding:36px;background:var(--fmn-surface);border:var(--line);border-radius:20px}
+.plate svg{width:100%;height:auto;display:block}
+.keys{margin:0;padding:0;list-style:none}
+.keys li{display:flex;gap:14px;padding:11px 0;border-bottom:var(--line);align-items:flex-start}
+.keys li:last-child{border-bottom:0}
+.dot{width:15px;height:15px;border-radius:50%;flex:0 0 auto;margin-top:5px;border:1px solid rgba(28,36,32,.16)}
+.keys b{font-weight:600;font-size:14.5px;display:block}
+.keys span{font-size:13.5px;color:var(--fmn-stem)}
+
+h2{font-family:var(--serif);font-weight:400;font-size:27px;letter-spacing:-.01em;margin:76px 0 6px}
+.sec-note{color:var(--fmn-stem);font-size:15px;margin:0 0 26px;max-width:52ch}
+
+/* --- swatchar --- */
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.sw{border:var(--line);border-radius:14px;overflow:hidden;background:var(--fmn-surface)}
+.sw-chip{height:92px}
+.sw-body{padding:13px 15px 15px}
+.sw-name{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--fmn-stem);margin:0 0 3px}
+.sw-hex{font-family:var(--serif);font-size:19px;font-weight:500;margin:0 0 6px;font-variant-numeric:tabular-nums}
+.sw-use{font-size:13px;color:var(--fmn-stem);margin:0;line-height:1.45}
+.tag{display:inline-block;font-size:11px;letter-spacing:.07em;text-transform:uppercase;padding:3px 8px;border-radius:999px;margin-top:9px;background:rgba(28,36,32,.07);color:var(--fmn-stem)}
+.tag.no{background:rgba(200,155,182,.28);color:#7A4A66}
+
+/* --- parningar --- */
+.pairs{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.pair{border-radius:14px;padding:22px 20px;border:var(--line)}
+.pair p{margin:0;font-size:15px}
+.pair small{display:block;margin-top:9px;font-size:12px;letter-spacing:.07em;text-transform:uppercase;opacity:.72}
+
+/* --- regler --- */
+.rules{margin:0;padding:0;list-style:none;counter-reset:r}
+.rules li{counter-increment:r;position:relative;padding:15px 0 15px 44px;border-bottom:var(--line);font-size:15.5px}
+.rules li:last-child{border-bottom:0}
+.rules li::before{content:counter(r);position:absolute;left:0;top:15px;width:26px;height:26px;border-radius:50%;background:var(--fmn-blue-deep);color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center}
+
+footer{margin-top:70px;padding-top:22px;border-top:var(--line);font-size:13px;color:var(--fmn-stem)}
+
+@media (max-width:720px){
+  .plate{grid-template-columns:1fr;gap:28px;padding:26px}
+  .plate figure{max-width:250px;margin:0 auto}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <p class="eyebrow">Färgpalett · v1</p>
+    <h1>Paletten kommer ur <em>blomman</em>, inte ur en färgväljare.</h1>
+    <p class="lede">Varje värde nedan motsvarar en faktisk del av Myosotis sylvatica. Det gör paletten svår att förväxla med någon annans — och lätt att motivera.</p>
+  </header>
+
+  <section class="plate">
+    <figure style="margin:0">
+      <svg viewBox="0 0 300 300" role="img" aria-label="Förgätmigej med utslagen blomma, rosa knopp och blad">
+        <!-- stjälk -->
+        <path d="M150 300 C144 236 152 208 168 176" stroke="#8A9A7C" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M158 232 C132 224 116 232 104 248" stroke="#8A9A7C" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <!-- blad -->
+        <path d="M104 248 C78 236 58 246 48 268 C74 284 96 274 104 248 Z" fill="#8A9A7C"/>
+        <path d="M104 248 C86 250 68 258 48 268" stroke="#55624C" stroke-width="1.5" fill="none" opacity=".5"/>
+
+        <!-- rosa knopp -->
+        <g>
+          <path d="M158 232 C150 214 156 198 172 194" stroke="#8A9A7C" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <circle cx="180" cy="188" r="14" fill="#C89BB6"/>
+          <circle cx="176" cy="184" r="5" fill="#D9B2C8" opacity=".75"/>
+        </g>
+
+        <!-- utslagen blomma -->
+        <g transform="translate(168,110)">
+          <g fill="#6E93D6">
+            <circle cx="0"    cy="-46" r="34"/>
+            <circle cx="44"   cy="-14" r="34"/>
+            <circle cx="27"   cy="38"  r="34"/>
+            <circle cx="-27"  cy="38"  r="34"/>
+            <circle cx="-44"  cy="-14" r="34"/>
+          </g>
+          <g fill="#C3D3EC" opacity=".85">
+            <circle cx="0"    cy="-56" r="18"/>
+            <circle cx="53"   cy="-18" r="18"/>
+            <circle cx="33"   cy="46"  r="18"/>
+            <circle cx="-33"  cy="46"  r="18"/>
+            <circle cx="-53"  cy="-18" r="18"/>
+          </g>
+          <g stroke="#3E5FA3" stroke-width="2" opacity=".5" fill="none" stroke-linecap="round">
+            <path d="M0 -20 L0 -44"/><path d="M19 -7 L41 -15"/>
+            <path d="M12 16 L25 34"/><path d="M-12 16 L-25 34"/><path d="M-19 -7 L-41 -15"/>
+          </g>
+          <circle cx="0" cy="0" r="19" fill="#FBFAF3"/>
+          <circle cx="0" cy="0" r="12" fill="#F0C23C"/>
+        </g>
+      </svg>
+    </figure>
+
+    <ul class="keys">
+      <li><span class="dot" style="background:#C3D3EC"></span><div><b>Kronbladets kant</b><span>Nästan urtvättad. Bakgrunder, fyllningar, inaktiva ytor.</span></div></li>
+      <li><span class="dot" style="background:#6E93D6"></span><div><b>Kronbladets fulla ton</b><span>Varumärkets blå. Stora ytor och ikoner.</span></div></li>
+      <li><span class="dot" style="background:#3E5FA3"></span><div><b>Ådring och skugga</b><span>Den enda blå som bär text. Knappar och länkar.</span></div></li>
+      <li><span class="dot" style="background:#FBFAF3"></span><div><b>Vita ringen</b><span>Kragen mellan gult och blått. Utan den skär de mot varandra.</span></div></li>
+      <li><span class="dot" style="background:#F0C23C"></span><div><b>Ögat</b><span>Litet i verkligheten, litet i designen. Aldrig text.</span></div></li>
+      <li><span class="dot" style="background:#C89BB6"></span><div><b>Knoppen</b><span>Rosa innan den slår ut. Palettens överraskning — spara den.</span></div></li>
+      <li><span class="dot" style="background:#8A9A7C"></span><div><b>Bladverket</b><span>Luddigt gråmatt grönt. Avdelare och dekor.</span></div></li>
+      <li><span class="dot" style="background:#55624C"></span><div><b>Stjälken</b><span>Bär all sekundärtext.</span></div></li>
+    </ul>
+  </section>
+
+  <h2>Värdena</h2>
+  <p class="sec-note">Kontrasten är mätt mot bottenfärgen. Etiketten säger vad färgen får bära.</p>
+  <div class="swatches">
+
+    <div class="sw"><div class="sw-chip" style="background:#EDF0EA"></div><div class="sw-body">
+      <p class="sw-name">fmn-ground</p><p class="sw-hex">#EDF0EA</p>
+      <p class="sw-use">Sidans botten. Dämpad grågrön så att blomfärgerna får vara det ljusa.</p>
+      <span class="tag">Botten</span></div></div>
+
+    <div class="sw"><div class="sw-chip" style="background:#F8FAF5"></div><div class="sw-body">
+      <p class="sw-name">fmn-surface</p><p class="sw-hex">#F8FAF5</p>
+      <p class="sw-use">Kort och upphöjda ytor. Ett steg ljusare än botten.</p>
+      <span class="tag">Yta</span></div></div>
+
+    <div class="sw"><div class="sw-chip" style="background:#1C2420"></div><div class="sw-body">
+      <p class="sw-name">fmn-ink</p><p class="sw-hex">#1C2420</p>
+      <p class="sw-use">Rubriker och brödtext. Svartgrön, inte ren svart.</p>
+      <span class="tag">16.1:1 · all text</span></div></div>
+
+    <div class="sw"><div class="sw-chip" style="background:#55624C"></div><div class="sw-body">
+      <p class="sw-name">fmn-stem</p><p class="sw-hex">#55624C</p>
+      <p class="sw-use">Sekundärtext, etiketter, hjälptexter.</p>
+      <span class="tag">5.6:1 · text</span></div></div>
+
+    <div class="sw"><div class="sw-chip" style="background:#3E5FA3"></div><div class="sw-body">
+      <p class="sw-name">fmn-blue-deep</p><p class="sw-hex">#3E5FA3</p>
+      <p class="sw-use">Knappar, länkar, fokusringar. Handlingens färg.</p>
+      <span class="tag">6.2:1 · text</span></div></div>
+
+    <div class="sw"><div class="sw-chip" style="background:#6E93D6"></div><div class="sw-body">
+      <p class="sw-name">fmn-blue</p><p class="sw-hex">#6E93D6</p>
+      <p class="sw-use">Varumärkesblå. Ikoner, illustration, stora ytor.</p>
+      <span class="tag no">Ej text</span></div></div>
+
+    <div class="sw"><div class="sw-chip" style="background:#C3D3EC"></div><div class="sw-body">
+      <p class="sw-name">fmn-blue-pale</p><p class="sw-hex">#C3D3EC</p>
+      <p class="sw-use">Spår, fyllningar, vilolägen.</p>
+      <span class="tag no">Ej text</span></div></div>
+
+    <div class="sw"><div class="sw-chip" style="background:#FBFAF3"></div><div class="sw-body">
+      <p class="sw-name">fmn-ring</p><p class="sw-hex">#FBFAF3</p>
+      <p class="sw-use">Kragen mellan gult och blått. Obligatorisk där de möts.</p>
+      <span class="tag">Separator</span></div></div>
+
+    <div class="sw"><div class="sw-chip" style="background:#F0C23C"></div><div class="sw-body">
+      <p class="sw-name">fmn-eye</p><p class="sw-hex">#F0C23C</p>
+      <p class="sw-use">Prickar, markörer, det som ska hittas. Några procent av ytan.</p>
+      <span class="tag no">Ej text</span></div></div>
+
+    <div class="sw"><div class="sw-chip" style="background:#C89BB6"></div><div class="sw-body">
+      <p class="sw-name">fmn-bud</p><p class="sw-hex">#C89BB6</p>
+      <p class="sw-use">Knoppens rosa. Sällsynt: ett tillstånd, en märkning, ett moment.</p>
+      <span class="tag no">Ej text</span></div></div>
+
+    <div class="sw"><div class="sw-chip" style="background:#8A9A7C"></div><div class="sw-body">
+      <p class="sw-name">fmn-leaf</p><p class="sw-hex">#8A9A7C</p>
+      <p class="sw-use">Illustration, avdelare, botaniska inslag.</p>
+      <span class="tag no">Ej text</span></div></div>
+
+    <div class="sw"><div class="sw-chip" style="background:#B0B6A9"></div><div class="sw-body">
+      <p class="sw-name">fmn-faded</p><p class="sw-hex">#B0B6A9</p>
+      <p class="sw-use">Inaktivt, uttynat, avstängt.</p>
+      <span class="tag no">Ej text</span></div></div>
+
+  </div>
+
+  <h2>Parningar som håller</h2>
+  <p class="sec-note">Alla kombinationer nedan är testade för läsbarhet. Använd dessa hellre än att blanda fritt.</p>
+  <div class="pairs">
+    <div class="pair" style="background:#EDF0EA;color:#1C2420"><p>Brödtext på botten</p><small>ink · ground</small></div>
+    <div class="pair" style="background:#F8FAF5;color:#55624C"><p>Hjälptext på kort</p><small>stem · surface</small></div>
+    <div class="pair" style="background:#3E5FA3;color:#FBFAF3"><p>Knapp i vila</p><small>ring · blue-deep</small></div>
+    <div class="pair" style="background:#1C2420;color:#C3D3EC"><p>Mörkt läge</p><small>blue-pale · ink</small></div>
+    <div class="pair" style="background:#C3D3EC;color:#1C2420"><p>Markerad rad</p><small>ink · blue-pale</small></div>
+    <div class="pair" style="background:#EDF0EA;color:#3E5FA3"><p>Länk i löpande text</p><small>blue-deep · ground</small></div>
+  </div>
+
+  <h2>Regler</h2>
+  <p class="sec-note">Fem meningar. Om en ny yta bryter mot någon av dem är det ytan som har fel.</p>
+  <ol class="rules">
+    <li>Ögat och knoppen är aldrig textfärger. De är prickar och markörer.</li>
+    <li>Gult möter blått bara med den vita ringen emellan.</li>
+    <li><b>fmn-blue-deep</b> är den enda blå som får bära text.</li>
+    <li>Bottenfärgen är aldrig ren vit — ljuset ska komma från blomman, inte från pappret.</li>
+    <li>Högst en av knopp och öga syns åt gången i samma vy.</li>
+  </ol>
+
+  <footer>Förgätmigej · palett v1 · värdena finns i <b>tokens.css</b></footer>
+</div>
+</body>
+</html>

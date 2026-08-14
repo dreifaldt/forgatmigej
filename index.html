@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Förgätmigej — hör av dig innan det gått för lång tid</title>
+<meta name="description" content="Förgätmigej håller räkningen på hur länge sedan du hörde av dig, och säger till i tid.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/tokens.css">
+<style>
+:root{
+  /* Färgvärdena bor i assets/tokens.css — ändra dem där, inte här. */
+  --lichen:var(--fmn-ground);
+  --card:var(--fmn-surface);
+  --ink:var(--fmn-ink);
+  --stem:var(--fmn-stem);
+  --blue:var(--fmn-blue);
+  --blue-deep:var(--fmn-blue-deep);
+  --blue-pale:var(--fmn-blue-pale);
+  --eye:var(--fmn-eye);
+  --ring:var(--fmn-ring);
+  --bud:var(--fmn-bud);
+  --leaf:var(--fmn-leaf);
+  --drift:var(--fmn-faded);
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"Karla","Helvetica Neue",Arial,sans-serif;
+  --edge:1px solid rgba(30,37,43,.12);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--lichen);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:17px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+:focus-visible{outline:2px solid var(--blue-deep);outline-offset:3px;border-radius:2px}
+
+.wrap{max-width:940px;margin:0 auto;padding:0 24px}
+
+/* ---------- header ---------- */
+.masthead{display:flex;align-items:center;justify-content:space-between;padding:22px 0 0}
+.brand{display:flex;align-items:center;gap:10px;background:none;border:0;padding:0;cursor:pointer;font-family:var(--sans);color:inherit}
+.brand-name{font-family:var(--serif);font-weight:500;font-size:20px;letter-spacing:.01em}
+.masthead-note{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--stem)}
+
+/* ---------- hero ---------- */
+.hero{padding:76px 0 12px;max-width:660px}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--stem);margin:0 0 26px}
+.hero-line{
+  font-family:var(--serif);
+  font-weight:300;
+  font-size:clamp(34px,6.4vw,58px);
+  line-height:1.08;
+  letter-spacing:-.015em;
+  margin:0;
+}
+.hero-line + .hero-line{margin-top:6px}
+.hero-line-turn{font-style:italic;font-weight:400;color:var(--blue-deep)}
+.hero-sub{margin:30px 0 0;max-width:44ch;color:var(--stem);font-size:17px}
+
+/* ---------- the drift line (signature) ---------- */
+.driftbox{margin:46px 0 0;max-width:560px}
+.drift-track{position:relative;height:10px;display:flex;align-items:center}
+.drift-rail{position:absolute;inset:4px 0 auto 0;height:2px;background:var(--blue-pale);border-radius:2px}
+.drift-fill{position:absolute;left:0;top:4px;height:2px;width:0;background:var(--drift);border-radius:2px;transition:width 1.7s cubic-bezier(.16,.7,.3,1)}
+.drift-bud{position:absolute;top:0;left:0;width:10px;height:10px;margin-left:-5px;transition:left 1.7s cubic-bezier(.16,.7,.3,1)}
+.drift-bud i{position:absolute;inset:0;border-radius:50%;background:var(--drift);display:block}
+.drift-bud i::after{content:"";position:absolute;inset:3.5px;border-radius:50%;background:var(--eye)}
+.drift-bud.is-fresh i{background:var(--blue)}
+.drift-caption{display:flex;justify-content:space-between;gap:18px;margin-top:14px;font-size:14px;color:var(--stem)}
+.drift-count{font-variant-numeric:tabular-nums;color:var(--ink)}
+
+/* ---------- buttons ---------- */
+.btn{
+  font-family:var(--sans);font-size:16px;font-weight:500;
+  padding:13px 24px;border-radius:999px;border:0;cursor:pointer;
+  background:var(--blue-deep);color:#fff;transition:background .18s ease,transform .18s ease;
+}
+.btn:hover{background:#33508B}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{background:var(--drift);cursor:not-allowed}
+.btn-quiet{background:transparent;color:var(--blue-deep);border:var(--edge);padding:11px 20px;font-size:15px}
+.btn-quiet:hover{background:rgba(92,127,196,.09)}
+.btn-small{font-size:14px;padding:9px 17px}
+.cta-row{margin-top:42px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.cta-fine{font-size:13.5px;color:var(--stem)}
+
+/* ---------- how ---------- */
+.how{margin:96px 0 0;padding:30px 0 0;border-top:var(--edge);display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.how-step h3{font-family:var(--sans);font-size:15px;font-weight:600;margin:0 0 6px}
+.how-step p{margin:0;font-size:14.5px;color:var(--stem);line-height:1.5}
+
+/* ---------- flow ---------- */
+.panel{max-width:540px;margin:70px auto 0;background:var(--card);border:var(--edge);border-radius:18px;padding:34px 34px 30px}
+.panel-meta{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--stem);margin:0 0 14px}
+.panel-q{font-family:var(--serif);font-weight:400;font-size:27px;line-height:1.2;margin:0 0 8px;letter-spacing:-.01em}
+.panel-help{margin:0 0 24px;font-size:15px;color:var(--stem)}
+.field{display:block;margin:0 0 20px}
+.field-label{display:block;font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--stem);margin:0 0 8px}
+.input{
+  width:100%;font-family:var(--sans);font-size:17px;color:var(--ink);
+  background:#fff;border:var(--edge);border-radius:10px;padding:12px 14px;
+}
+.input:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(92,127,196,.18)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  font-family:var(--sans);font-size:14.5px;color:var(--ink);
+  background:#fff;border:var(--edge);border-radius:999px;padding:8px 15px;cursor:pointer;
+  transition:border-color .15s ease,background .15s ease;
+}
+.chip:hover{border-color:var(--blue)}
+.chip[aria-pressed="true"]{background:var(--blue-deep);border-color:var(--blue-deep);color:#fff}
+.panel-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:28px;padding-top:22px;border-top:var(--edge)}
+.error{margin:-10px 0 18px;font-size:14px;color:#9A3F2E}
+.linkish{background:none;border:0;padding:0;font-family:var(--sans);font-size:15px;color:var(--stem);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.linkish:hover{color:var(--ink)}
+
+/* ---------- list ---------- */
+.list-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap;margin:64px 0 26px}
+.list-title{font-family:var(--serif);font-weight:400;font-size:30px;margin:0;letter-spacing:-.01em}
+.person{background:var(--card);border:var(--edge);border-radius:16px;padding:22px 24px;margin-bottom:12px}
+.person-top{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+.person-name{font-family:var(--serif);font-size:21px;font-weight:500;margin:0}
+.person-meta{font-size:13.5px;color:var(--stem);margin:2px 0 0}
+.person-days{font-size:14px;color:var(--stem);font-variant-numeric:tabular-nums;white-space:nowrap}
+.person-drift{margin:20px 0 0}
+.person-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:16px;flex-wrap:wrap}
+.status{font-size:14.5px;color:var(--stem)}
+.status.is-due{color:var(--ink);font-weight:500}
+.empty{background:var(--card);border:1px dashed rgba(30,37,43,.2);border-radius:16px;padding:38px 26px;text-align:center;color:var(--stem)}
+
+/* ---------- toast ---------- */
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);
+  background:var(--ink);color:var(--ring);font-size:14.5px;
+  padding:12px 20px;border-radius:999px;opacity:0;pointer-events:none;
+  transition:opacity .2s ease,transform .2s ease;z-index:9;
+}
+.toast.is-on{opacity:1;transform:translate(-50%,0)}
+
+footer{margin:86px 0 40px;padding-top:22px;border-top:var(--edge);font-size:13px;color:var(--stem);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+[hidden]{display:none !important}
+
+@media (max-width:680px){
+  .how{grid-template-columns:1fr;gap:20px}
+  .hero{padding-top:52px}
+  .panel{padding:26px 22px 24px;margin-top:44px}
+  .masthead-note{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="masthead">
+    <button class="brand" id="brandBtn" aria-label="Till startsidan">
+      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+        <g fill="var(--fmn-blue)">
+          <circle cx="11" cy="4.6" r="4"/><circle cx="17.1" cy="9" r="4"/>
+          <circle cx="14.8" cy="16.2" r="4"/><circle cx="7.2" cy="16.2" r="4"/>
+          <circle cx="4.9" cy="9" r="4"/>
+        </g>
+        <circle cx="11" cy="11" r="3.9" fill="var(--fmn-ring)"/>
+        <circle cx="11" cy="11" r="2.5" fill="var(--fmn-eye)"/>
+      </svg>
+      <span class="brand-name">Förgätmigej</span>
+    </button>
+    <span class="masthead-note">MVP · en flöde</span>
+  </header>
+
+  <!-- ============ LANDING ============ -->
+  <main id="viewLanding">
+    <section class="hero">
+      <p class="eyebrow">Det smyger sig på</p>
+      <h1 class="hero-line">Du tänker på dem varje vecka.</h1>
+      <p class="hero-line hero-line-turn">Du hör av dig varje halvår.</p>
+      <p class="hero-sub">Förgätmigej räknar dagarna åt dig och knuffar till i tid — innan tystnaden hunnit bli obekväm.</p>
+
+      <div class="driftbox" aria-hidden="true">
+        <div class="drift-track">
+          <span class="drift-rail"></span>
+          <span class="drift-fill" id="heroFill"></span>
+          <span class="drift-bud" id="heroBud"><i></i></span>
+        </div>
+        <div class="drift-caption">
+          <span>sedan du ringde mormor</span>
+          <span class="drift-count"><span id="heroCount">0</span> dagar</span>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <button class="btn" id="startBtn">Lägg till någon</button>
+        <span class="cta-fine">Tre frågor. Ingen inloggning.</span>
+      </div>
+    </section>
+
+    <section class="how">
+      <div class="how-step">
+        <h3>Lägg till någon</h3>
+        <p>En person du inte vill tappa bort. Mormor, kompisen från Umeå, brorsan.</p>
+      </div>
+      <div class="how-step">
+        <h3>Välj en takt</h3>
+        <p>Hur ofta du faktiskt vill höra av dig — inte hur ofta du borde.</p>
+      </div>
+      <div class="how-step">
+        <h3>Få en knuff</h3>
+        <p>När dagarna dragit iväg säger vi till. Du bestämmer vad du gör med det.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FLOW ============ -->
+  <main id="viewFlow" hidden>
+    <div class="panel">
+      <p class="panel-meta" id="stepMeta">Fråga 1 av 3</p>
+      <div id="stepBody"></div>
+      <div class="panel-foot">
+        <button class="linkish" id="backBtn">Tillbaka</button>
+        <button class="btn" id="nextBtn">Nästa</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ LIST ============ -->
+  <main id="viewList" hidden>
+    <div class="list-head">
+      <h2 class="list-title">Dina människor</h2>
+      <button class="btn btn-quiet btn-small" id="addMoreBtn">Lägg till någon till</button>
+    </div>
+    <div id="peopleList"></div>
+  </main>
+
+  <footer>
+    <span>Förgätmigej — <a href="brand.html" style="color:var(--stem)">palett</a></span>
+    <span>Prototyp. Inget sparas när du stänger fliken.</span>
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var RHYTHMS = [
+    {label:"Varje vecka", days:7,  phrase:"varje vecka"},
+    {label:"Varannan vecka", days:14, phrase:"varannan vecka"},
+    {label:"Varje månad", days:30, phrase:"varje månad"},
+    {label:"Var tredje månad", days:90, phrase:"var tredje månad"}
+  ];
+  var LASTS = [
+    {label:"I dag", days:0},
+    {label:"Den här veckan", days:4},
+    {label:"Nån månad sen", days:38},
+    {label:"Minns inte", days:null}
+  ];
+  var RELATIONS = ["Mamma","Pappa","Mormor","Farfar","Syskon","Vän"];
+
+  var state = {
+    people: [],
+    draft: null,
+    step: 1
+  };
+  var seq = 0;
+
+  var $ = function(id){ return document.getElementById(id); };
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- views ---------- */
+  function show(view){
+    $("viewLanding").hidden = view !== "landing";
+    $("viewFlow").hidden    = view !== "flow";
+    $("viewList").hidden    = view !== "list";
+    window.scrollTo({top:0, behavior: reduced ? "auto" : "smooth"});
+  }
+
+  /* ---------- hero animation ---------- */
+  function runHero(){
+    var target = 213, ratio = 0.93;
+    var fill = $("heroFill"), bud = $("heroBud"), count = $("heroCount");
+    if(reduced){
+      fill.style.width = (ratio*100)+"%";
+      bud.style.left = (ratio*100)+"%";
+      count.textContent = target;
+      return;
+    }
+    requestAnimationFrame(function(){
+      fill.style.width = (ratio*100)+"%";
+      bud.style.left = (ratio*100)+"%";
+    });
+    var t0 = null, dur = 1700;
+    function tick(ts){
+      if(t0 === null) t0 = ts;
+      var p = Math.min((ts-t0)/dur, 1);
+      var eased = 1 - Math.pow(1-p, 3);
+      count.textContent = Math.round(eased*target);
+      if(p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  /* ---------- drift line builder ---------- */
+  function driftLine(daysSince, intervalDays){
+    var ratio = Math.min(daysSince / intervalDays, 1);
+    var fresh = daysSince < intervalDays * 0.6;
+    var pct = Math.max(ratio*100, 2);
+    return '<div class="drift-track">'
+      + '<span class="drift-rail"></span>'
+      + '<span class="drift-fill" style="width:'+pct+'%;'+(fresh?'background:var(--blue);':'')+'"></span>'
+      + '<span class="drift-bud'+(fresh?' is-fresh':'')+'" style="left:'+pct+'%"><i></i></span>'
+      + '</div>';
+  }
+
+  /* ---------- flow ---------- */
+  function newDraft(){
+    return { name:"", relation:"", rhythm:null, last:null };
+  }
+
+  function chipRow(items, selectedIndex, handlerName){
+    var html = '<div class="chips">';
+    for(var i=0;i<items.length;i++){
+      html += '<button type="button" class="chip" data-pick="'+handlerName+'" data-i="'+i+'" aria-pressed="'
+        + (selectedIndex === i ? "true" : "false") + '">' + items[i] + '</button>';
+    }
+    return html + '</div>';
+  }
+
+  function renderStep(){
+    var d = state.draft;
+    $("stepMeta").textContent = "Fråga " + state.step + " av 3";
+    var body = "";
+
+    if(state.step === 1){
+      body += '<h2 class="panel-q">Vem vill du inte tappa bort?</h2>'
+        + '<p class="panel-help">Namnet är bara för dig. Vi skickar ingenting till dem.</p>'
+        + '<label class="field"><span class="field-label">Namn</span>'
+        + '<input class="input" id="nameInput" type="text" placeholder="Ingrid" value="'
+        + d.name.replace(/"/g,"&quot;") + '" autocomplete="off"></label>'
+        + '<p class="error" id="nameError" hidden>Skriv ett namn så vet du vem knuffen gäller.</p>'
+        + '<span class="field-label">Vem är det?</span>'
+        + chipRow(RELATIONS, RELATIONS.indexOf(d.relation), "relation");
+      $("nextBtn").textContent = "Nästa";
+    }
+
+    if(state.step === 2){
+      var rl = RHYTHMS.map(function(r){ return r.label; });
+      body += '<h2 class="panel-q">Hur ofta vill du höra av dig?</h2>'
+        + '<p class="panel-help">Välj takten du faktiskt klarar av, inte den du tycker att du borde hålla.</p>'
+        + chipRow(rl, d.rhythm, "rhythm");
+      $("nextBtn").textContent = "Nästa";
+    }
+
+    if(state.step === 3){
+      var ll = LASTS.map(function(l){ return l.label; });
+      body += '<h2 class="panel-q">När hörde du av dig senast?</h2>'
+        + '<p class="panel-help">Ungefär räcker. Räknaren börjar där.</p>'
+        + chipRow(ll, d.last, "last");
+      $("nextBtn").textContent = "Lägg till " + (d.name || "personen");
+    }
+
+    $("stepBody").innerHTML = body;
+    $("backBtn").textContent = state.step === 1 ? "Avbryt" : "Tillbaka";
+    syncNext();
+
+    if(state.step === 1){
+      var input = $("nameInput");
+      input.addEventListener("input", function(){
+        state.draft.name = input.value;
+        $("nameError").hidden = true;
+        syncNext();
+      });
+      input.focus();
+    }
+  }
+
+  function syncNext(){
+    var d = state.draft, ok = true;
+    if(state.step === 1) ok = d.name.trim().length > 0;
+    if(state.step === 2) ok = d.rhythm !== null;
+    if(state.step === 3) ok = d.last !== null;
+    $("nextBtn").disabled = !ok;
+  }
+
+  document.addEventListener("click", function(e){
+    var chip = e.target.closest ? e.target.closest("[data-pick]") : null;
+    if(!chip) return;
+    var kind = chip.getAttribute("data-pick");
+    var i = parseInt(chip.getAttribute("data-i"), 10);
+    if(kind === "relation"){
+      state.draft.relation = (state.draft.relation === RELATIONS[i]) ? "" : RELATIONS[i];
+    } else {
+      state.draft[kind] = i;
+    }
+    renderStep();
+  });
+
+  /* ---------- list ---------- */
+  function renderList(){
+    var box = $("peopleList");
+    if(state.people.length === 0){
+      box.innerHTML = '<div class="empty">Ingen här än. Lägg till den första personen du tänker på.</div>';
+      return;
+    }
+    var sorted = state.people.slice().sort(function(a,b){
+      return (b.daysSince/b.interval) - (a.daysSince/a.interval);
+    });
+    var html = "";
+    for(var i=0;i<sorted.length;i++){
+      var p = sorted[i];
+      var due = p.daysSince >= p.interval;
+      var left = p.interval - p.daysSince;
+      var status = due
+        ? "Dags att höra av dig"
+        : "Nästa knuff om " + left + (left === 1 ? " dag" : " dagar");
+      var meta = [p.relation, p.phrase].filter(Boolean).join(" · ");
+      html += '<article class="person">'
+        + '<div class="person-top"><div>'
+        + '<h3 class="person-name">' + esc(p.name) + '</h3>'
+        + (meta ? '<p class="person-meta">' + esc(meta) + '</p>' : '')
+        + '</div><span class="person-days">' + p.daysSince + (p.daysSince === 1 ? " dag" : " dagar") + '</span></div>'
+        + '<div class="person-drift">' + driftLine(p.daysSince, p.interval) + '</div>'
+        + '<div class="person-foot">'
+        + '<span class="status' + (due ? " is-due" : "") + '">' + status + '</span>'
+        + '<button class="btn btn-quiet btn-small" data-touch="' + p.id + '">Jag hörde av mig</button>'
+        + '</div></article>';
+    }
+    box.innerHTML = html;
+  }
+
+  function esc(s){
+    return String(s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+
+  document.addEventListener("click", function(e){
+    var btn = e.target.closest ? e.target.closest("[data-touch]") : null;
+    if(!btn) return;
+    var id = parseInt(btn.getAttribute("data-touch"), 10);
+    for(var i=0;i<state.people.length;i++){
+      if(state.people[i].id === id){
+        state.people[i].daysSince = 0;
+        toast("Antecknat. Räknaren för " + state.people[i].name + " står på noll.");
+      }
+    }
+    renderList();
+  });
+
+  /* ---------- toast ---------- */
+  var toastTimer;
+  function toast(msg){
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.add("is-on");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ t.classList.remove("is-on"); }, 3200);
+  }
+
+  /* ---------- wiring ---------- */
+  $("startBtn").addEventListener("click", function(){
+    state.draft = newDraft();
+    state.step = 1;
+    show("flow");
+    renderStep();
+  });
+
+  $("addMoreBtn").addEventListener("click", function(){
+    state.draft = newDraft();
+    state.step = 1;
+    show("flow");
+    renderStep();
+  });
+
+  $("brandBtn").addEventListener("click", function(){
+    show(state.people.length ? "list" : "landing");
+    if(state.people.length) renderList();
+  });
+
+  $("backBtn").addEventListener("click", function(){
+    if(state.step === 1){
+      show(state.people.length ? "list" : "landing");
+      if(state.people.length) renderList();
+      return;
+    }
+    state.step--;
+    renderStep();
+  });
+
+  $("nextBtn").addEventListener("click", function(){
+    var d = state.draft;
+    if(state.step === 1){
+      if(!d.name.trim()){ $("nameError").hidden = false; return; }
+      state.step = 2; renderStep(); return;
+    }
+    if(state.step === 2){ state.step = 3; renderStep(); return; }
+
+    var r = RHYTHMS[d.rhythm];
+    var l = LASTS[d.last];
+    var since = (l.days === null) ? Math.round(r.days * 1.25) : Math.min(l.days, Math.round(r.days*1.4));
+    state.people.push({
+      id: ++seq,
+      name: d.name.trim(),
+      relation: d.relation ? d.relation.toLowerCase() : "",
+      interval: r.days,
+      phrase: r.phrase,
+      daysSince: since
+    });
+    state.draft = null;
+    show("list");
+    renderList();
+    toast(d.name.trim() + " är tillagd. Vi håller räkningen.");
+  });
+
+  runHero();
+})();
+</script>
+</body>
+</html>

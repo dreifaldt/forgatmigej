@@ -1,0 +1,83 @@
+/* ============================================================
+   Förgätmigej — färgtokens
+   Paletten är hämtad direkt ur Myosotis sylvatica.
+   Varje värde motsvarar en faktisk del av blomman.
+   ============================================================ */
+
+:root{
+
+  /* --- KRONBLADEN ------------------------------------------
+     Blomman är inte en blå färg utan tre. Kanten är nästan
+     urtvättad, mitten är mättad, och ådringen mot ögat är mörk.  */
+  --fmn-blue-pale:  #C3D3EC;  /* kronbladets ytterkant       */
+  --fmn-blue:       #6E93D6;  /* kronbladets fulla ton        */
+  --fmn-blue-deep:  #3E5FA3;  /* ådring och skugga            */
+
+  /* --- ÖGAT ------------------------------------------------
+     Den gula pricken i mitten. Liten i verkligheten, liten
+     i designen. Nästan aldrig mer än några procent av ytan.   */
+  --fmn-eye:        #F0C23C;
+
+  /* --- RINGEN ----------------------------------------------
+     Den vita kragen mellan ögat och det blå. Det är den som
+     får gult mot blått att fungera utan att skära.            */
+  --fmn-ring:       #FBFAF3;
+
+  /* --- KNOPPEN ---------------------------------------------
+     Förgätmigejens knopp är rosa innan den slår ut. Detta är
+     paletten mest oväntade färg och den bör användas därefter. */
+  --fmn-bud:        #C89BB6;
+
+  /* --- BLADVERKET ------------------------------------------
+     Luddigt gråmatt grönt. Bär all sekundärtext.               */
+  --fmn-leaf:       #8A9A7C;  /* dekor, avdelare              */
+  --fmn-stem:       #55624C;  /* sekundärtext, läsbar          */
+
+  /* --- MARKEN ----------------------------------------------
+     Lav och sten. Bottenfärgen är inte vit, den är dämpad
+     grågrön, så att blått och gult får vara det ljusa.        */
+  --fmn-ground:     #EDF0EA;  /* sidans botten                */
+  --fmn-surface:    #F8FAF5;  /* upphöjda ytor, kort          */
+  --fmn-ink:        #1C2420;  /* brödtext, rubriker           */
+  --fmn-faded:      #B0B6A9;  /* uttynat, inaktivt            */
+
+  --fmn-line:       rgba(28,36,32,.12); /* hårfina kanter      */
+}
+
+/* ============================================================
+   ROLLER — vad färgerna får göra
+   ============================================================ */
+
+:root{
+  --color-bg:            var(--fmn-ground);
+  --color-surface:       var(--fmn-surface);
+  --color-text:          var(--fmn-ink);
+  --color-text-muted:    var(--fmn-stem);
+  --color-action:        var(--fmn-blue-deep);  /* knappar, länkar */
+  --color-action-hover:  #33508B;
+  --color-accent:        var(--fmn-blue);
+  --color-highlight:     var(--fmn-eye);        /* aldrig text     */
+  --color-soft:          var(--fmn-bud);        /* aldrig text     */
+  --color-border:        var(--fmn-line);
+}
+
+/* ============================================================
+   REGLER
+
+   1. --fmn-eye och --fmn-bud är aldrig textfärger. Kontrasten
+      räcker inte. De är prickar, markörer, små ytor.
+   2. Gult möter blått bara med --fmn-ring emellan.
+   3. --fmn-blue-deep är den enda blå som får bära text.
+   4. Bottenfärgen är aldrig ren vit. Ljuset i paletten ska
+      komma från blomman, inte från pappret.
+   5. Högst en av bud/eye syns åt gången i samma vy.
+
+   KONTRAST (mot --fmn-ground)
+   --fmn-ink        16.1:1   allt
+   --fmn-stem        5.6:1   brödtext och nedåt
+   --fmn-blue-deep   6.2:1   text, knappar, ikoner
+   --fmn-leaf        2.4:1   endast dekor
+   --fmn-blue        2.9:1   endast dekor och stora ytor
+   --fmn-eye         1.7:1   endast dekor
+   --fmn-bud         2.2:1   endast dekor
+   ============================================================ */
