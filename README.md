@@ -33,21 +33,20 @@ Sedan `http://localhost:8000`.
 Repot ligger redan med en första commit på grenen `main`.
 
 ```bash
-git remote add origin https://github.com/DITT-NAMN/forgatmigej.git
-git push -u origin main
+git push -u origin main   # fjärranslutningen är redan inlagd
 ```
 
 Därefter på github.com:
 
 **Settings → Pages → Build and deployment → Source: `Deploy from a branch` → Branch: `main` / `(root)` → Save**
 
-Sajten dyker upp på `https://DITT-NAMN.github.io/forgatmigej/` efter en minut eller två.
+Sajten dyker upp på `https://dreifaldt.github.io/forgatmigej/` efter en minut eller två.
 
 ### Domän
 
 Sajten ska ligga på **forgatmigej.dreifaldt.com**. Filen `CNAME` i roten är redan ifylld.
 
-1. Hos DNS-leverantören för `dreifaldt.com`: skapa en **CNAME-post** `forgatmigej` som pekar på `DITT-NAMN.github.io` (utan reponamnet).
+1. Hos DNS-leverantören för `dreifaldt.com`: skapa en **CNAME-post** `forgatmigej` som pekar på `dreifaldt.github.io` (utan reponamnet).
 2. **Settings → Pages → Custom domain** → `forgatmigej.dreifaldt.com` → Save.
 3. Vänta tills DNS-kontrollen blir grön, kryssa sedan i **Enforce HTTPS**.
 4. Verifiera domänen under **Settings → Pages → Verified domains**. Det hindrar någon annan från att kapa subdomänen om den någon gång slutar peka hit.
