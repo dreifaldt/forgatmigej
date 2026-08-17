@@ -107,17 +107,22 @@ export const SITES: readonly Site[] = [
   {
     id: "mrkoll",
     name: "MrKoll",
-    // Adressen är angiven av Erik 2026-08-17. Sidans innehåll går inte att läsa:
-    // MrKoll svarar med en hård Cloudflare-blockering, inte ens en challenge.
-    // Därför rätt sida men inga steg — vi öppnar den och låter deras egen text
-    // tala. Att gissa vad som står där vore att hitta på.
     url: "https://mrkoll.se/om/andra-uppgifter/",
-    does: "Oftast döljs bara adress och telefonnummer — posten ligger kvar.",
-    note: "Adressdöljningen är kortlivad och behöver göras om ofta.",
-    bankId: false,
+    // Deras sida erbjuder inte borttagning alls — bara döljning av telefonnummer
+    // och utdelningsadress. Skriv inte om det till något större.
+    does: "Du kan dölja telefonnummer och utdelningsadress. Själva posten ligger kvar.",
+    note: "De kallar adressdöljningen ”tillfällig” med egna ord, och ändringen kan ta upp till sju dagar att slå igenom.",
+    bankId: true,
     route: "window",
-    steps: [],
-    verified: false,
+    steps: [
+      "Klicka på ”Starta inloggning med Mobilt BankID” på deras sida.",
+      "Legitimera dig i BankID-appen — de kräver Mobilt BankID för att ändra något.",
+      "Dölj de telefonnummer du vill ta bort, och din utdelningsadress.",
+      "Räkna med upp till sju dagar innan ändringen syns överallt på sajten.",
+    ],
+    verified: true,
+    source:
+      "Avläst från mrkoll.se/om/andra-uppgifter/ 2026-08-17 (skärmbild — sidan blockerar hämtning). Deras text: ”Med hjälp av Mobilt BankID kan du själv dölja ett eller flera telefonnummer samt tillfälligt dölja din utdelningsadress… det kan dröja upp till 7 dagar innan dina ändringar får synbar effekt.” MrKoll drivs av Nusvar AB.",
   },
   {
     id: "merinfo",
@@ -133,8 +138,10 @@ export const SITES: readonly Site[] = [
   {
     id: "eniro",
     name: "Eniro",
-    url: "https://www.eniro.se",
-    does: "Begäran om borttagning görs via uppdateringssidan.",
+    // Adressen angiven av Erik 2026-08-17. Sidan svarar 403 bakom Cloudflare, så
+    // innehållet är oläst — rätt sida, men inga steg vi kan gå i god för.
+    url: "https://uppdatera.eniro.se/person",
+    does: "Uppgifterna ändras eller tas bort via deras uppdateringssida.",
     note: "Giltighetstid inte offentligt angiven.",
     bankId: true,
     route: "window",
