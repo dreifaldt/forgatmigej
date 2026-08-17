@@ -1,7 +1,7 @@
 <script lang="ts">
   import Mark from "./Mark.svelte";
   import Stepper from "./Stepper.svelte";
-  import type { Site } from "../lib/sites";
+  import { buildRemovalEmail, mailtoHref, type Site } from "../lib/sites";
 
   /**
    * Startskärmen för en borttagning.
@@ -45,6 +45,21 @@
    * Utan `|| blocked` blir den vägen en återvändsgränd.
    */
   const started = $derived(opened || blocked);
+
+  /**
+   * Uppgifterna för mejlspåret. De lämnar aldrig webbläsaren: de går in i en
+   * mailto-adress som öppnas i användarens egen e-postklient. Vi har ingen
+   * server att skicka dem till ens om vi ville.
+   *
+   * Personnummer finns inte med, och ska inte läggas till. Profillänken pekar ut
+   * samma post och är mindre känslig.
+   */
+  let name = $state("");
+  let profileUrl = $state("");
+
+  const preview = $derived(buildRemovalEmail(site, name, profileUrl));
+  const href = $derived(mailtoHref(site, name, profileUrl));
+  const ready = $derived(name.trim().length > 1 && profileUrl.trim().length > 4);
 
   function open() {
     blocked = false;
@@ -96,10 +111,15 @@
     <h1 class="mt-1 font-serif text-3xl font-light">{site.name}</h1>
 
     <p class="mt-4 text-stem">
-      {site.name} kräver att du själv säger ifrån{site.bankId
-        ? " och legitimerar dig med BankID"
-        : ""}. Vi öppnar deras sida i ett eget fönster och står kvar här med
-      instruktionerna medan du gör det.
+      {#if site.route === "email"}
+        Hos {site.name} görs borttagningen per mejl. Vi skriver brevet åt dig — du skickar
+        det från din egen adress, så att de ser att begäran kommer från dig.
+      {:else}
+        {site.name} kräver att du själv säger ifrån{site.bankId
+          ? " och legitimerar dig med BankID"
+          : ""}. Vi öppnar deras sida i ett eget fönster och står kvar här med
+        instruktionerna medan du gör det.
+      {/if}
     </p>
 
     {#if site.steps.length > 0}
@@ -127,7 +147,78 @@
       <p class="mt-4 text-[12.5px] leading-relaxed text-stem">{site.source}</p>
     {/if}
 
-    {#if !started}
+    {#if site.route === "email"}
+      <!-- Mejlspåret. Vi skriver brevet, hon skickar det från sin egen adress —
+           ett brev från oss i hennes namn hade både saknat trovärdighet och
+           fastnat i skräpposten. -->
+      <div class="mt-7 grid gap-4">
+        <label class="grid gap-1.5">
+          <span class="text-sm font-medium">Ditt namn</span>
+          <span class="text-[13px] text-stem">Så att de hittar rätt post.</span>
+          <input
+            bind:value={name}
+            type="text"
+            autocomplete="name"
+            placeholder="För- och efternamn"
+            class="rounded-xl border border-[var(--color-line)] bg-ring px-4 py-2.5 text-[15px]"
+          />
+        </label>
+
+        <label class="grid gap-1.5">
+          <span class="text-sm font-medium">Länk till din sida hos {site.name}</span>
+          <span class="text-[13px] text-stem">
+            Sök upp dig själv hos dem och kopiera adressen. Den pekar ut rätt post — därför
+            behöver du aldrig uppge ditt personnummer.
+          </span>
+          <input
+            bind:value={profileUrl}
+            type="url"
+            inputmode="url"
+            placeholder="https://…"
+            class="rounded-xl border border-[var(--color-line)] bg-ring px-4 py-2.5 text-[15px]"
+          />
+        </label>
+
+        <button
+          type="button"
+          onclick={open}
+          class="justify-self-start rounded-full border border-[var(--color-line)] px-5 py-2.5 text-sm transition hover:bg-ground"
+        >
+          Öppna {site.name} och sök upp dig
+        </button>
+
+        <details class="rounded-2xl bg-ground p-4">
+          <summary class="cursor-pointer text-sm font-medium">Så här blir mejlet</summary>
+          <pre
+            class="mt-3 font-sans text-[13px] leading-relaxed whitespace-pre-wrap text-stem">{preview}</pre>
+        </details>
+
+        <a
+          href={ready ? href : undefined}
+          aria-disabled={!ready}
+          class={`rounded-full px-6 py-3.5 text-center font-medium transition ${
+            ready
+              ? "bg-blue-deep text-ring hover:bg-blue-hover"
+              : "pointer-events-none bg-blue-deep/40 text-ring"
+          }`}
+        >
+          Öppna mejlet i din e-postklient
+        </a>
+
+        <p class="text-[12.5px] text-stem">
+          Mejlet öppnas färdigskrivet — du skickar det själv, från din egen adress. Vi har
+          ingen server och kan varken läsa eller spara det du fyllt i.
+        </p>
+
+        <button
+          type="button"
+          onclick={ondone}
+          class="rounded-full border border-[var(--color-line)] px-5 py-3 text-sm transition hover:bg-ground"
+        >
+          Jag har skickat mejlet
+        </button>
+      </div>
+    {:else if !started}
       <button
         type="button"
         onclick={open}
