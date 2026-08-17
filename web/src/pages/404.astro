@@ -1,0 +1,75 @@
+---
+import Base from "../layouts/Base.astro";
+import Mark from "../components/Mark.svelte";
+import VineBackground from "../components/VineBackground.astro";
+import { path } from "../lib/paths";
+
+/**
+ * 404.
+ *
+ * Skämtet är det enda som ligger nära till hands för just den här produkten: sidan
+ * har utövat samma rätt som användaren är här för att utöva. Skillnaden — och det är
+ * hela poängen — är att vi lät den gå direkt, medan personsöktjänsterna hade behövt
+ * en begäran, ett BankID och en påminnelse ett halvår senare.
+ *
+ * Till skillnad från rotens gamla 404 är den här stilad var man än hamnar: alla
+ * sökvägar går genom path(), inte rotabsoluta "/assets/...". Pages serverar samma
+ * fil för godtyckliga adresser, och relativa sökvägar hade brutits på djupa paths.
+ */
+---
+
+<Base
+  title="Här växer ingenting — Förgätmigej"
+  description="Sidan finns inte. Antingen har den aldrig funnits, eller så bad den om att bli bortglömd."
+>
+  <VineBackground opacity={0.45} />
+
+  <div class="mx-auto flex min-h-screen max-w-[620px] flex-col px-6">
+    <header class="pt-6">
+      <a href={path("")} class="inline-flex items-center gap-2.5">
+        <Mark size={22} />
+        <span class="font-serif text-xl font-medium">Förgätmigej</span>
+      </a>
+    </header>
+
+    <main class="flex flex-1 flex-col justify-center py-16">
+      <p class="text-xs tracking-[0.16em] text-stem uppercase">Fel 404</p>
+
+      <h1 class="mt-6 font-serif text-[clamp(32px,6vw,52px)] leading-[1.08] font-light tracking-[-0.015em]">
+        Här växer ingenting.
+      </h1>
+      <p class="mt-1.5 font-serif text-[clamp(32px,6vw,52px)] leading-[1.08] tracking-[-0.015em] text-blue-deep italic">
+        Eller så bad sidan om att få bli bortglömd.
+      </p>
+
+      <p class="mt-7 max-w-[46ch] text-stem">
+        Vi hittar ingenting på den adressen. Antingen har den aldrig funnits, eller så
+        begärde den att tas bort — och till skillnad från personsöktjänsterna gick vi med
+        på det direkt. Ingen väntetid, inget BankID, ingen ny begäran om ett halvår.
+      </p>
+
+      <div class="mt-10 flex flex-wrap items-center gap-4">
+        <a
+          href={path("")}
+          class="rounded-full bg-blue-deep px-6 py-3.5 font-medium text-ring transition hover:bg-blue-hover"
+        >
+          Till startsidan
+        </a>
+        <a
+          href={path("ta-bort")}
+          class="rounded-full border border-[var(--color-line)] bg-surface px-6 py-3.5 font-medium transition hover:bg-ground"
+        >
+          Begär att bli borttagen
+        </a>
+      </div>
+    </main>
+
+    <footer class="pb-10 text-[13px] text-stem">
+      Om du väntade dig något annat här, <a
+        class="underline underline-offset-2"
+        href="mailto:erik@dreifaldt.com?subject=Trasig%20l%C3%A4nk%20p%C3%A5%20F%C3%B6rg%C3%A4tmigej"
+        >säg till</a
+      >.
+    </footer>
+  </div>
+</Base>
