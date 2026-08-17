@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
  *     att någon gjort något fel.
  *  3. Ingen av tjänsterna publicerar hur länge en spärr faktiskt gäller. Vi lovar därför
  *     ingen tid — vi säger "titta till det ett par gånger om året", vilket är det enda
- *     som går att belägga.
+ *     som går att belägga. Att bevaka det åt användaren är en senare feature, inte MVP.
  *
  * Och så det viktigaste: att göra om det ska vara en knapp, inte ett projekt.
  */
@@ -80,12 +80,6 @@ export function DonePanel({
         >
           {busy ? "Startar…" : "Skicka en ny begäran"}
         </button>
-        <a
-          href="https://forgatmigej.dreifaldt.com"
-          className="text-sm text-blue-deep underline underline-offset-2"
-        >
-          Håll koll på när spärrarna löper ut
-        </a>
       </div>
     </section>
   );

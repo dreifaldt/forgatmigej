@@ -1,13 +1,25 @@
 # Förgätmigej
 
+**Produkten är borttagning, inte bevakning** (scopet rättat 2026-08-17). MVP är: välj sajter → ta
+bort användarens uppgifter från dem en gång → visa en kvittens. Att bevaka om användaren dyker upp
+igen — scanning plus bevakning — är en **senare feature, uttryckligen inte MVP**.
+
+Det spelar roll för att roten fram till 2026-08-17 var byggd som motsatsen: en nedräkning mot att
+spärrar löper ut, med copy som lovade att sajten *inte* skickar någon begäran åt användaren. Den
+copyn var live och motsade produkten. Skriv inte tillbaka den.
+
 Repot är **två saker** sedan 2026-08-14. Blanda inte ihop dem:
 
 | | Roten | `service/` |
 |---|---|---|
-| Vad | Statisk bevakningssajt: nedräkning mot att frivilliga spärrar löper ut | Next.js-app som genomför borttagningarna |
+| Vad | Statisk landningssida + urval av sajter. Steg 1 i MVP | Next.js-app som genomför borttagningarna. Steg 2 och 3 |
 | Byggsteg | Inget. Inga beroenden, ingen paketfil | `npm install`, `npx playwright install chromium`, 17 tester |
 | Samlar in | **Ingenting** | Bara det en vald tjänst faktiskt kräver, när den kräver det. Fyra av sex tjänster: noll fält |
-| Publiceras | GitHub Pages | Inte ännu |
+| Publiceras | GitHub Pages | **Inte ännu — blockerat på att selektorerna verifieras** |
+
+De två halvorna hänger inte ihop i kod ännu: roten slutar i en sammanställning som säger rakt ut
+att automatiken inte är öppen, och länkar vidare till varje sajt. Det är avsiktligt — inget
+automatiserat klick skickas ut mot gissade selektorer.
 
 Roten är oförändrad och ska förbli det. **Lägg inte till ett byggsteg i roten** — frånvaron av det
 är ett designbeslut, och `service/` finns just för att slippa det.
@@ -23,7 +35,7 @@ Settings → Pages → Source står på **GitHub Actions**, inte "Deploy from a 
 
 | Fil | Roll |
 |---|---|
-| `index.html` | Hela sajten i en fil: landningssida, tvåstegsflöde, all CSS i ett `<style>`, all JS. Tjänstdatan ligger i `SITES` (rad ~238). |
+| `index.html` | Hela sajten i en fil: landningssida, urval, sammanställning. All CSS i ett `<style>`, all JS. Sajtdatan ligger i `SITES`. |
 | `brand.html` | Fristående färgplansch: botanisk SVG, swatchar, regellista. Dokumentation — inte produkt. |
 | `404.html` | Rotabsoluta sökvägar (Pages serverar den för godtyckliga paths). Följden: ostilad tills egen domän är på plats. |
 | `assets/tokens.css` | Enda delade CSS-filen. Palettens definition. |
@@ -49,13 +61,14 @@ kopplingen om du lägger till något. Reglerna står i klartext längst ner i `t
 
 ### Var den rosa knoppen faktiskt sitter
 
-Två ställen, båda i nedräkningslinjen i `index.html`:
+**Ingenstans, sedan 2026-08-17.** Rosa markerade utgången spärr, och nedräkningen som ägde det
+tillståndet togs bort när scopet rättades till borttagning. Ingen sida i repot använder
+`--fmn-bud` längre — varken roten eller `service/`.
 
-- `.drift-bud.is-lapsed i{background:var(--bud)}` (rad ~65)
-- `driftLine()` sätter `background:var(--bud)` på fyllningen när `lapsed` är sant (rad ~301)
-
-Tillståndet heter `lapsed` i koden och "utgången spärr" i texten. Dyker en tredje användning av
-rosa upp är regeln bruten — leta efter en annan lösning i stället.
+Aliaset `--bud` står kvar definierat i `index.html` med en kommentar om varför det är oanvänt.
+Det är avsiktligt, samma val som `service/` gjort: färgen har en betydelse reserverad, inte ledig.
+**Ta inte det som en inbjudan att ge den en ny uppgift.** Kommer bevakningen tillbaka är det
+utgången spärr den ska märka ut, ingenting annat.
 
 ## Hur tokens faktiskt används
 
@@ -77,12 +90,15 @@ ser ut så — det är död kod tills någon river det eller tar det i bruk på 
 
 Finns redan i repot. Städa gärna, men vet att de är där innan du "upptäcker" dem igen:
 
-- `#33508B` (hover-blå) hårdkodad i `index.html:71` och `404.html:25`, trots att värdet redan finns
+(Radnummer i `index.html` gäller efter omskrivningen 2026-08-17. Antalet avvikelser är oförändrat
+— inga nya tillkom.)
+
+- `#33508B` (hover-blå) hårdkodad i `index.html:60` och `404.html:25`, trots att värdet redan finns
   som `--color-action-hover` i `tokens.css`. Två kopior som kan glida isär.
-- `rgba(28,36,32,.12)` upprepad som `--edge` i `index.html:30` och `--line` i `brand.html:15`, trots
+- `rgba(28,36,32,.12)` upprepad som `--edge` i `index.html:32` och `--line` i `brand.html:15`, trots
   att `--fmn-line` är exakt samma värde.
-- Tonade varianter i `index.html:75,98,111` — `rgba(110,147,214,.16)`, `rgba(28,36,32,.28)`, `#fff`.
-  Paletten har inga tint-tokens; det är hålet de fyller.
+- Tonade varianter i `index.html:64,88,101` — `rgba(110,147,214,.11)`, `rgba(110,147,214,.16)`,
+  `rgba(28,36,32,.28)`, `#fff`. Paletten har inga tint-tokens; det är hålet de fyller.
 - `brand.html` använder literal hex i planschens SVG och i swatcharna. Det är avsiktligt — sidan
   demonstrerar värdena. Men `brand.html:51` drar in `#7A4A66`, som inte finns i paletten alls.
 
@@ -109,18 +125,25 @@ de visas för någon.
 ## Innehåll och löften
 
 - Allt användarvänt är på svenska. Håll tonen: kort, konkret, utan juridikprosa.
-- **Den statiska sajten** skickar inga begäranden åt användaren, ber aldrig om personnummer eller
-  BankID, och sparar ingenting. Nya fält eller flöden i roten får inte bryta det löftet.
-- **Tjänsten** skickar begäranden, men ber fortfarande aldrig om personnummer: Ratsit är
-  BankID-gated och användaren signerar direkt hos dem. Löftet är inte "vi frågar aldrig om något"
-  utan "vi frågar bara om det som krävs, när det krävs, och säger varför". Håll den formuleringen
-  rak i copy — de är inte samma löfte.
+- **Produkten skickar begäranden åt användaren.** Det är hela poängen. Rotens gamla copy sa
+  motsatsen ("Förgätmigej gör ingen begäran åt dig — du gör spärren själv") och är borttagen. Skriv
+  inte tillbaka den formuleringen i någon variant.
+- **Vi frågar aldrig efter personnummer.** Kräver sajten BankID legitimerar användaren sig direkt
+  hos dem, mot deras egen kod. Löftet är inte "vi frågar aldrig om något" utan "vi frågar bara om
+  det som krävs, när det krävs, och säger varför". Håll den formuleringen rak — de är inte samma
+  löfte, och det svagare är det sanna.
+- **Att döljas är inte att raderas, och det håller inte för alltid.** Sajterna behåller uppgifterna
+  och hämtar nya uttag ur offentliga register. Slutskärmen ska säga det rakt ut och göra det lätt
+  att begära om — inte "Klart!" och punkt. Se `DonePanel.tsx`, som redan gör det.
 - Ingen juridisk rådgivning. Rättsläget rör sig — IMY hävdar tillsynsrätt även över tjänster med
   frivilligt utgivningsbevis — så skriv inget tvärsäkert om GDPR.
-- `SITES` bär `days:` per tjänst: Ratsit 365, Hitta 1095, MrKoll 30, övriga `null` med
-  `FALLBACK_DAYS = 90`. Siffrorna är hämtade publikt och delvis overifierade. Flagga hellre än gissa.
-- `SITES` i `index.html` är enda stället som behöver röras när en tjänsts giltighetstid, metod eller
-  URL ändras.
+- `SITES` bär `days:` per tjänst (Ratsit 365, Hitta 1095, MrKoll 30, övriga `null`). **Fältet
+  används inte av MVP** — det hör till bevakningen och ligger kvar som researchad data. Siffrorna
+  är hämtade publikt och delvis overifierade. Flagga hellre än gissa. `FALLBACK_DAYS` är borta
+  tillsammans med nedräkningen.
+- `SITES` i `index.html` är enda stället som behöver röras när en sajts metod eller URL ändras.
+  **Sex sajter, samma lista som `service/src/core/registry.ts`.** Birthday.se är borttagen ur båda
+  — håll dem i takt.
 
 ## `service/` — progressiv uppgiftsinsamling
 
@@ -215,8 +238,10 @@ QR-bilder, en per sekund, signering upptäckt, `SUBMITTED` satt. Kör om den inn
 
 Kö (webbläsaren körs i Next-processen — flytta till en worker bakom BullMQ innan riktig trafik),
 verifierade selektorer, lagring som överlever omstart (`store.ts` är i minnet med två timmars TTL;
-`RequestStore` är formen en Postgres-adapter ska ha), utskick av e-postbegäran, och nedräkningen —
-den bor kvar i den statiska sajten.
+`RequestStore` är formen en Postgres-adapter ska ha), och utskick av e-postbegäran.
+
+Verifierade selektorer är det som blockerar allt annat: tjänsten publiceras inte förrän de är
+avlästa. Bevakningen finns inte någonstans längre och är inte MVP — se toppen av filen.
 
 ### Färg i tjänsten, och rankan
 

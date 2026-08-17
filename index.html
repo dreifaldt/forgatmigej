@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Förgätmigej — håll koll på när dina spärrar löper ut</title>
-<meta name="description" content="Personsöktjänsterna behöver inte radera dig. Spärrarna du gör löper ut i tysthet. Förgätmigej håller räkningen.">
+<title>Förgätmigej — ta bort dina uppgifter från personsöktjänsterna</title>
+<meta name="description" content="Välj vilka personsöktjänster du vill bort ifrån. Förgätmigej gör begäran åt dig — du legitimerar dig hos tjänsten, resten fylls i bakom kulisserna.">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,6 +22,8 @@
   --blue-pale:var(--fmn-blue-pale);
   --eye:var(--fmn-eye);
   --ring:var(--fmn-ring);
+  /* --bud är definierad men oanvänd: den markerar utgången spärr, och MVP har
+     ingen nedräkning. Ge den ingen annan betydelse — se regel 3 i tokens.css. */
   --bud:var(--fmn-bud);
   --leaf:var(--fmn-leaf);
   --drift:var(--fmn-faded);
@@ -53,19 +55,6 @@ body{
 .hero-line-turn{font-style:italic;font-weight:400;color:var(--blue-deep)}
 .hero-sub{margin:30px 0 0;max-width:46ch;color:var(--stem)}
 
-/* ---------- spärrlinjen (signaturen) ---------- */
-.driftbox{margin:44px 0 0;max-width:560px}
-.drift-track{position:relative;height:10px;display:flex;align-items:center}
-.drift-rail{position:absolute;inset:4px 0 auto 0;height:2px;background:var(--blue-pale);border-radius:2px}
-.drift-fill{position:absolute;left:0;top:4px;height:2px;width:0;background:var(--drift);border-radius:2px;transition:width 1.7s cubic-bezier(.16,.7,.3,1)}
-.drift-bud{position:absolute;top:0;left:0;width:10px;height:10px;margin-left:-5px;transition:left 1.7s cubic-bezier(.16,.7,.3,1)}
-.drift-bud i{position:absolute;inset:0;border-radius:50%;background:var(--drift);display:block}
-.drift-bud i::after{content:"";position:absolute;inset:3.5px;border-radius:50%;background:var(--ring)}
-.drift-bud.is-active i{background:var(--blue)}
-.drift-bud.is-lapsed i{background:var(--bud)}
-.drift-caption{display:flex;justify-content:space-between;gap:18px;margin-top:14px;font-size:14px;color:var(--stem)}
-.drift-count{font-variant-numeric:tabular-nums;color:var(--ink)}
-
 /* ---------- knappar ---------- */
 .btn{font-family:var(--sans);font-size:16px;font-weight:500;padding:13px 24px;border-radius:999px;border:0;cursor:pointer;background:var(--blue-deep);color:var(--ring);transition:background .18s ease,transform .18s ease;text-decoration:none;display:inline-block}
 .btn:hover{background:#33508B}
@@ -77,10 +66,11 @@ body{
 .cta-row{margin-top:42px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .cta-fine{font-size:13.5px;color:var(--stem)}
 
-/* ---------- varför ---------- */
+/* ---------- så går det till ---------- */
 .how{margin:96px 0 0;padding:30px 0 0;border-top:var(--edge);display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
 .how-step h3{font-family:var(--sans);font-size:15px;font-weight:600;margin:0 0 6px}
 .how-step p{margin:0;font-size:14.5px;color:var(--stem);line-height:1.5}
+.how-num{font-family:var(--serif);font-size:13px;color:var(--blue-deep);display:block;margin-bottom:4px}
 
 /* ---------- flöde ---------- */
 .panel{max-width:560px;margin:70px auto 0;background:var(--card);border:var(--edge);border-radius:18px;padding:34px 34px 30px}
@@ -111,17 +101,12 @@ body{
 .badge{font-size:11px;letter-spacing:.09em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:rgba(110,147,214,.16);color:var(--blue-deep);white-space:nowrap}
 .site-does{font-size:14.5px;color:var(--stem);margin:9px 0 0;max-width:60ch}
 .site-note{font-size:13.5px;color:var(--stem);margin:6px 0 0;padding-left:13px;border-left:2px solid var(--blue-pale)}
-.site-drift{margin:20px 0 0}
-.site-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;flex-wrap:wrap}
-.status{font-size:14.5px;color:var(--stem)}
-.status.is-due{color:var(--ink);font-weight:500}
-.acts{display:flex;gap:9px;flex-wrap:wrap}
+.site-foot{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:16px;flex-wrap:wrap}
 
-.disclaimer{margin:34px 0 0;padding:18px 20px;border:var(--edge);border-radius:14px;font-size:13.5px;color:var(--stem);line-height:1.5}
-
-/* ---------- toast ---------- */
-.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);background:var(--ink);color:var(--ring);font-size:14.5px;padding:12px 20px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;z-index:9;max-width:90vw;text-align:center}
-.toast.is-on{opacity:1;transform:translate(-50%,0)}
+.notice{margin:30px 0 0;padding:18px 20px;background:var(--card);border:var(--edge);border-left:3px solid var(--blue-pale);border-radius:14px;font-size:14.5px;color:var(--stem);line-height:1.55}
+.notice h3{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--ink);margin:0 0 6px}
+.notice p{margin:0}
+.disclaimer{margin:16px 0 0;padding:18px 20px;border:var(--edge);border-radius:14px;font-size:13.5px;color:var(--stem);line-height:1.5}
 
 footer{margin:86px 0 40px;padding-top:22px;border-top:var(--edge);font-size:13px;color:var(--stem);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 footer a{color:var(--stem)}
@@ -162,63 +147,60 @@ footer a{color:var(--stem)}
       <p class="eyebrow">Personsöktjänster · Sverige</p>
       <h1 class="hero-line">Du kan inte kräva att bli raderad.</h1>
       <p class="hero-line hero-line-turn">Du kan be. Och sedan be igen.</p>
-      <p class="hero-sub">Ratsit, Hitta och de andra har utgivningsbevis. Grundlagsskyddet gör att GDPR:s raderingsrätt inte biter på dem. Det som finns är sajternas egna spärrar — och de löper ut i tysthet.</p>
-
-      <div class="driftbox" aria-hidden="true">
-        <div class="drift-track">
-          <span class="drift-rail"></span>
-          <span class="drift-fill" id="heroFill"></span>
-          <span class="drift-bud is-lapsed" id="heroBud"><i></i></span>
-        </div>
-        <div class="drift-caption">
-          <span>Ratsit · spärren du gjorde i fjol</span>
-          <span class="drift-count">gick ut för <span id="heroCount">0</span> dagar sedan</span>
-        </div>
-      </div>
+      <p class="hero-sub">Ratsit, Hitta och de andra har utgivningsbevis. Grundlagsskyddet gör att GDPR:s raderingsrätt inte biter på dem. Men de tar emot en begäran om att döljas — och den gör Förgätmigej åt dig, hos en sajt i taget.</p>
 
       <div class="cta-row">
-        <button class="btn" id="startBtn">Sätt upp bevakning</button>
-        <span class="cta-fine">Gratis. Ingen inloggning. Inget personnummer.</span>
+        <button class="btn" id="startBtn">Ta bort mina uppgifter</button>
+        <span class="cta-fine">Gratis. Inget konto. Vi frågar aldrig efter ditt personnummer.</span>
       </div>
     </section>
 
     <section class="how">
       <div class="how-step">
-        <h3>GDPR hjälper inte</h3>
-        <p>Sajterna har utgivningsbevis från Mediemyndigheten och lyder under yttrandefrihetsgrundlagen. De måste inte radera dig.</p>
+        <span class="how-num">01</span>
+        <h3>Du väljer sajterna</h3>
+        <p>Kryssa i var du vill bort ifrån. Alla är förvalda från början — kryssa bort dem du vill vara kvar på.</p>
       </div>
       <div class="how-step">
-        <h3>Spärrarna tar slut</h3>
-        <p>Ratsit döljer dig i tolv månader, Hitta i trettiosex. Ingen påminner dig när tiden gått ut.</p>
+        <span class="how-num">02</span>
+        <h3>Vi gör begäran</h3>
+        <p>Kräver sajten BankID legitimerar du dig i din egen app, mot sajtens egen kod. Formuläret fylls i bakom kulisserna åt dig.</p>
       </div>
       <div class="how-step">
-        <h3>Uppgifterna kommer tillbaka</h3>
-        <p>Sajterna hämtar nya uttag ur offentliga register med jämna mellanrum. Dolda profiler kan dyka upp igen.</p>
+        <span class="how-num">03</span>
+        <h3>Du får en kvittens</h3>
+        <p>En lista på vad som skickats. Dyker du upp igen — och det händer — är det bara att begära borttagning en gång till.</p>
       </div>
     </section>
   </main>
 
-  <!-- ============ FLÖDE ============ -->
+  <!-- ============ VAL ============ -->
   <main id="viewFlow" hidden>
     <div class="panel">
-      <p class="panel-meta" id="stepMeta">Steg 1 av 2</p>
+      <p class="panel-meta">Välj sajter</p>
       <div id="stepBody"></div>
       <div class="panel-foot">
         <button class="linkish" id="backBtn">Avbryt</button>
-        <button class="btn" id="nextBtn">Nästa</button>
+        <button class="btn" id="nextBtn">Fortsätt</button>
       </div>
     </div>
   </main>
 
-  <!-- ============ LISTAN ============ -->
-  <main id="viewList" hidden>
+  <!-- ============ PLANEN ============ -->
+  <main id="viewPlan" hidden>
     <div class="list-head">
-      <h2 class="list-title">Dina spärrar</h2>
+      <h2 class="list-title">Det här begär vi</h2>
       <button class="btn btn-quiet btn-small" id="editBtn">Ändra urval</button>
     </div>
-    <p class="list-note">Gör spärren hos sajten, kom tillbaka och tryck <b>Jag har dolt mig</b>. Då börjar nedräkningen.</p>
+    <p class="list-note">En begäran per sajt, i tur och ordning. Nedan står vad var och en faktiskt gör med dina uppgifter.</p>
     <div id="siteList"></div>
-    <p class="disclaimer">Förgätmigej gör ingen begäran åt dig och behöver aldrig ditt personnummer — du gör spärren själv hos varje sajt. Rutinerna och giltighetstiderna ändras utan förvarning, så kontrollera alltid mot sajten. Det här är information, inte juridisk rådgivning.</p>
+
+    <div class="notice">
+      <h3>Automatiken är inte öppen än</h3>
+      <p>Vi läser av varje sajts formulär för hand innan vi klickar åt någon — ett automatiserat klick på gissade fält är inte något vi skickar ut. Tills dess tar länkarna ovan dig direkt till rätt sida hos varje sajt.</p>
+    </div>
+
+    <p class="disclaimer">Att döljas är inte att raderas. Uppgifterna ligger kvar i sajternas register, och de hämtar nya uttag ur offentliga register med jämna mellanrum — du kan alltså dyka upp igen utan att någon gjort något fel. Då begär du borttagning på nytt. Vi frågar aldrig efter ditt personnummer: kräver sajten BankID legitimerar du dig direkt hos dem. Rutiner ändras utan förvarning. Det här är information, inte juridisk rådgivning.</p>
   </main>
 
   <footer>
@@ -227,14 +209,13 @@ footer a{color:var(--stem)}
   </footer>
 </div>
 
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-
 <script>
 (function(){
   "use strict";
 
-  /* Giltighetstider som sajterna själva angett. null = inte offentligt angiven,
-     då räknar vi med kvartalsvis kontroll istället. Kontrollera mot källan. */
+  /* days: hur länge sajten uppger att en spärr gäller. Används inte i MVP —
+     bevakningen är en senare feature. Siffrorna är hämtade publikt och delvis
+     overifierade; kontrollera mot källan innan de visas för någon. */
   var SITES = [
     {id:"ratsit", name:"Ratsit", method:"BankID", url:"https://www.ratsit.se/tabort",
      does:"Hela den publika profilen döljs och försvinner ur Googles resultat.",
@@ -251,16 +232,12 @@ footer a{color:var(--stem)}
     {id:"eniro", name:"Eniro", method:"BankID", url:"https://www.eniro.se",
      does:"Begäran om borttagning görs via uppdateringssidan.",
      days:null, note:"Giltighetstid inte offentligt angiven."},
-    {id:"birthday", name:"Birthday.se", method:"E-post", url:"https://www.birthday.se",
-     does:"Borttagning ur publika söket, oftast inom några dagar.",
-     days:null, note:"Mejla med namn, adress och länken till din sida."},
     {id:"upplysning", name:"Upplysning.se", method:"E-post", url:"https://www.upplysning.se",
      does:"Borttagning ur publika söket.",
      days:null, note:"Mejla med namn, adress och länken till din sida."}
   ];
-  var FALLBACK_DAYS = 90;
 
-  var state = { picked:{}, done:{}, step:1 };
+  var state = { picked:{} };
   SITES.forEach(function(s){ state.picked[s.id] = true; });
 
   var $ = function(id){ return document.getElementById(id); };
@@ -269,196 +246,53 @@ footer a{color:var(--stem)}
   function show(v){
     $("viewLanding").hidden = v !== "landing";
     $("viewFlow").hidden    = v !== "flow";
-    $("viewList").hidden    = v !== "list";
+    $("viewPlan").hidden    = v !== "plan";
     window.scrollTo({top:0, behavior: reduced ? "auto" : "smooth"});
   }
 
-  /* ---------- hero ---------- */
-  function runHero(){
-    var target = 47, ratio = 1;
-    var fill = $("heroFill"), bud = $("heroBud"), count = $("heroCount");
-    if(reduced){
-      fill.style.width = "100%"; bud.style.left = "100%"; count.textContent = target; return;
-    }
-    requestAnimationFrame(function(){
-      fill.style.width = (ratio*100)+"%";
-      bud.style.left = (ratio*100)+"%";
+  function renderPick(){
+    var body = '<h2 class="panel-q">Var vill du bort ifrån?</h2>'
+      + '<p class="panel-help">Alla är förvalda. Kryssa bort dem du vill vara kvar på.</p>'
+      + '<div class="picks">';
+    SITES.forEach(function(s){
+      body += '<button type="button" class="pick" data-pick="'+s.id+'" aria-pressed="'
+        + (state.picked[s.id]?"true":"false") + '"><span class="pick-box"></span><span>'
+        + '<span class="pick-name">'+s.name+'</span>'
+        + '<span class="pick-sub">'+s.does+'</span></span></button>';
     });
-    var t0=null, dur=1700;
-    function tick(ts){
-      if(t0===null) t0=ts;
-      var p = Math.min((ts-t0)/dur, 1);
-      count.textContent = Math.round((1-Math.pow(1-p,3))*target);
-      if(p<1) requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  }
-
-  function driftLine(elapsed, total, lapsed, started){
-    var ratio = started ? Math.min(elapsed/total, 1) : 0;
-    var pct = Math.max(ratio*100, started ? 2 : 0);
-    var cls = !started ? "" : (lapsed ? " is-lapsed" : " is-active");
-    var col = !started ? "" : (lapsed ? "background:var(--bud);" : "background:var(--blue);");
-    return '<div class="drift-track"><span class="drift-rail"></span>'
-      + '<span class="drift-fill" style="width:'+pct+'%;'+col+'"></span>'
-      + '<span class="drift-bud'+cls+'" style="left:'+pct+'%"><i></i></span></div>';
-  }
-
-  /* ---------- flöde ---------- */
-  function renderStep(){
-    $("stepMeta").textContent = "Steg " + state.step + " av 2";
-    var body = "";
-
-    if(state.step === 1){
-      body += '<h2 class="panel-q">Vilka sajter vill du hålla koll på?</h2>'
-        + '<p class="panel-help">Alla är förvalda. Kryssa bort dem du inte bryr dig om.</p>'
-        + '<div class="picks">';
-      SITES.forEach(function(s){
-        body += '<button type="button" class="pick" data-pick="'+s.id+'" aria-pressed="'
-          + (state.picked[s.id]?"true":"false") + '"><span class="pick-box"></span><span>'
-          + '<span class="pick-name">'+s.name+'</span>'
-          + '<span class="pick-sub">'+s.method+' · '+(s.days?durText(s.days):"giltighetstid okänd")+'</span></span></button>';
-      });
-      body += '</div>';
-      $("nextBtn").textContent = "Nästa";
-      $("backBtn").textContent = "Avbryt";
-    }
-
-    if(state.step === 2){
-      var chosen = SITES.filter(function(s){ return state.picked[s.id]; });
-      body += '<h2 class="panel-q">Har du redan dolt dig någonstans?</h2>'
-        + '<p class="panel-help">Kryssa i där du gjort spärren nyligen. Vet du inte — lämna tomt, så behandlar vi den som ogjord.</p>'
-        + '<div class="picks">';
-      chosen.forEach(function(s){
-        body += '<button type="button" class="pick" data-done="'+s.id+'" aria-pressed="'
-          + (state.done[s.id]?"true":"false") + '"><span class="pick-box"></span><span>'
-          + '<span class="pick-name">'+s.name+'</span>'
-          + '<span class="pick-sub">'+s.does+'</span></span></button>';
-      });
-      body += '</div>';
-      $("nextBtn").textContent = "Visa mina spärrar";
-      $("backBtn").textContent = "Tillbaka";
-    }
-
+    body += '</div>';
     $("stepBody").innerHTML = body;
-    syncNext();
+    $("nextBtn").disabled = !SITES.some(function(s){ return state.picked[s.id]; });
   }
 
-  function syncNext(){
-    if(state.step === 1){
-      var any = SITES.some(function(s){ return state.picked[s.id]; });
-      $("nextBtn").disabled = !any;
-    } else {
-      $("nextBtn").disabled = false;
-    }
-  }
-
-  function durText(d){
-    if(d >= 365) return Math.round(d/365) + (Math.round(d/365)===1?" år":" år");
-    if(d >= 30)  return Math.round(d/30) + " mån";
-    return d + " dagar";
-  }
-
-  document.addEventListener("click", function(e){
-    var t = e.target.closest ? e.target.closest("[data-pick],[data-done]") : null;
-    if(!t) return;
-    var pid = t.getAttribute("data-pick"), did = t.getAttribute("data-done");
-    if(pid){ state.picked[pid] = !state.picked[pid]; }
-    if(did){ state.done[did] = !state.done[did]; }
-    renderStep();
-  });
-
-  /* ---------- listan ---------- */
-  function renderList(){
-    var chosen = SITES.filter(function(s){ return state.picked[s.id]; });
+  function renderPlan(){
     var html = "";
-
-    chosen.sort(function(a,b){
-      return rank(a) - rank(b);
-    });
-
-    chosen.forEach(function(s){
-      var total   = s.days || FALLBACK_DAYS;
-      var started = !!state.done[s.id];
-      var elapsed = started ? (state.elapsed && state.elapsed[s.id] || 0) : 0;
-      var lapsed  = started && elapsed >= total;
-      var left    = total - elapsed;
-
-      var status;
-      if(!started)      status = s.days ? "Inte gjord" : "Inte gjord — kontrollera kvartalsvis";
-      else if(lapsed)   status = "Spärren har löpt ut — gör om den";
-      else if(!s.days)  status = "Kontrollera igen om " + left + " dagar";
-      else              status = "Aktiv · " + left + (left===1?" dag":" dagar") + " kvar";
-
+    SITES.filter(function(s){ return state.picked[s.id]; }).forEach(function(s){
       html += '<article class="site">'
         + '<div class="site-top"><h3 class="site-name">'+s.name+'</h3>'
-        + '<span class="badge">'+s.method+' · '+(s.days?durText(s.days):"okänd tid")+'</span></div>'
+        + '<span class="badge">'+s.method+'</span></div>'
         + '<p class="site-does">'+s.does+'</p>'
         + (s.note ? '<p class="site-note">'+s.note+'</p>' : '')
-        + '<div class="site-drift">'+driftLine(elapsed,total,lapsed,started)+'</div>'
         + '<div class="site-foot">'
-        + '<span class="status'+((lapsed||!started)?" is-due":"")+'">'+status+'</span>'
-        + '<span class="acts">'
         + '<a class="btn btn-quiet btn-small" href="'+s.url+'" target="_blank" rel="noopener noreferrer">Öppna '+s.name+'</a>'
-        + '<button class="btn btn-small" data-mark="'+s.id+'">'+(started&&!lapsed?"Nollställ":"Jag har dolt mig")+'</button>'
-        + '</span></div></article>';
+        + '</div></article>';
     });
-
     $("siteList").innerHTML = html;
   }
 
-  function rank(s){
-    var total = s.days || FALLBACK_DAYS;
-    var started = !!state.done[s.id];
-    var elapsed = started ? (state.elapsed && state.elapsed[s.id] || 0) : 0;
-    if(!started) return 0;
-    if(elapsed >= total) return 1;
-    return 2 + (1 - elapsed/total);
-  }
-
   document.addEventListener("click", function(e){
-    var b = e.target.closest ? e.target.closest("[data-mark]") : null;
-    if(!b) return;
-    var id = b.getAttribute("data-mark");
-    var site = SITES.filter(function(s){ return s.id===id; })[0];
-    state.elapsed = state.elapsed || {};
-    state.done[id] = true;
-    state.elapsed[id] = 0;
-    var total = site.days || FALLBACK_DAYS;
-    toast(site.name + " · nedräkningen börjar om. Vi säger till om " + total + " dagar.");
-    renderList();
+    var t = e.target.closest ? e.target.closest("[data-pick]") : null;
+    if(!t) return;
+    var id = t.getAttribute("data-pick");
+    state.picked[id] = !state.picked[id];
+    renderPick();
   });
 
-  var tt;
-  function toast(msg){
-    var t = $("toast");
-    t.textContent = msg; t.classList.add("is-on");
-    clearTimeout(tt); tt = setTimeout(function(){ t.classList.remove("is-on"); }, 3600);
-  }
-
-  /* ---------- koppling ---------- */
-  $("startBtn").addEventListener("click", function(){ state.step=1; show("flow"); renderStep(); });
-  $("editBtn").addEventListener("click", function(){ state.step=1; show("flow"); renderStep(); });
+  $("startBtn").addEventListener("click", function(){ show("flow"); renderPick(); });
+  $("editBtn").addEventListener("click", function(){ show("flow"); renderPick(); });
   $("brandBtn").addEventListener("click", function(){ show("landing"); });
-
-  $("backBtn").addEventListener("click", function(){
-    if(state.step === 1){ show("landing"); return; }
-    state.step = 1; renderStep();
-  });
-
-  $("nextBtn").addEventListener("click", function(){
-    if(state.step === 1){ state.step = 2; renderStep(); return; }
-    // demo: markera "redan gjorda" som halvvägs gångna så listan visar liv
-    state.elapsed = state.elapsed || {};
-    SITES.forEach(function(s){
-      if(state.done[s.id] && state.elapsed[s.id] === undefined){
-        state.elapsed[s.id] = Math.round((s.days || FALLBACK_DAYS) * 0.72);
-      }
-    });
-    show("list"); renderList();
-  });
-
-  runHero();
+  $("backBtn").addEventListener("click", function(){ show("landing"); });
+  $("nextBtn").addEventListener("click", function(){ show("plan"); renderPlan(); });
 })();
 </script>
 </body>

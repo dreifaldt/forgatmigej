@@ -1,7 +1,7 @@
 # Förgätmigej — borttagningstjänsten
 
-Next.js-appen som genomför borttagningarna. Ligger bredvid den statiska bevakningssajten i
-repots rot, som är oförändrad och fortfarande saknar byggsteg.
+Next.js-appen som genomför borttagningarna — steg 2 och 3 i produkten. Ligger bredvid den statiska
+sajten i repots rot, som är landningssida och urval (steg 1) och fortfarande saknar byggsteg.
 
 ```bash
 npm install
@@ -152,7 +152,9 @@ BankID-tjänst: anropa `bankIdProvider()` med en `BankIdFlowConfig` och lägg de
 - **Lagring som överlever omstart.** `store.ts` är i minnet med två timmars TTL. `RequestStore`
   är formen en Postgres-adapter ska ha; skriv kryptering i vila och automatisk radering samtidigt.
 - **Utskick av e-postbegäran.** Upplysning-providern formulerar men skickar inte.
-- **Nedräkningen.** Bor kvar i den statiska sajten.
+- **Bevakningen.** Att söka på användaren igen och säga till när hon dyker upp. Uttryckligen inte
+  MVP (2026-08-17) och finns inte längre någonstans i repot — nedräkningen som fanns i den statiska
+  sajten är borttagen. Se rotens README.
 
 ## Paletten och rankan
 
