@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Förgätmigej — ta bort dina uppgifter från personsöktjänsterna</title>
-<meta name="description" content="Välj vilka personsöktjänster du vill bort ifrån. Förgätmigej gör begäran åt dig — du legitimerar dig hos tjänsten, resten fylls i bakom kulisserna.">
+<title>Förgätmigej — begär att bli borttagen från personsöktjänsterna</title>
+<meta name="description" content="Din adress, ditt telefonnummer och din inkomst ligger öppet hos svenska personsöktjänster. Begär att bli borttagen från allihop i ett svep. Gratis, inget konto, aldrig ditt personnummer.">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -66,8 +66,17 @@ body{
 .cta-row{margin-top:42px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .cta-fine{font-size:13.5px;color:var(--stem)}
 
+/* ---------- vad som ligger uppe ---------- */
+.exposed{margin:76px 0 0;background:var(--card);border:var(--edge);border-radius:18px;padding:30px 32px}
+.exposed h2{font-family:var(--serif);font-weight:400;font-size:clamp(22px,3.4vw,27px);margin:0 0 7px;letter-spacing:-.01em}
+.exposed .lead{margin:0 0 22px;color:var(--stem);font-size:15px;max-width:58ch}
+.exposed ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:12px 28px}
+.exposed li{display:flex;align-items:center;gap:12px;font-size:15.5px}
+/* Ögat som markör — liten yta, aldrig text. Se regel 2 i tokens.css. */
+.exposed .dot{width:9px;height:9px;border-radius:50%;background:var(--eye);flex:0 0 auto}
+
 /* ---------- så går det till ---------- */
-.how{margin:96px 0 0;padding:30px 0 0;border-top:var(--edge);display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.how{margin:76px 0 0;padding:30px 0 0;border-top:var(--edge);display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
 .how-step h3{font-family:var(--sans);font-size:15px;font-weight:600;margin:0 0 6px}
 .how-step p{margin:0;font-size:14.5px;color:var(--stem);line-height:1.5}
 .how-num{font-family:var(--serif);font-size:13px;color:var(--blue-deep);display:block;margin-bottom:4px}
@@ -114,6 +123,8 @@ footer a{color:var(--stem)}
 
 @media (max-width:680px){
   .how{grid-template-columns:1fr;gap:20px}
+  .exposed{padding:24px 22px}
+  .exposed ul{grid-template-columns:1fr}
   .hero{padding-top:52px}
   .panel{padding:26px 22px 24px;margin-top:44px}
   .masthead-note{display:none}
@@ -144,32 +155,63 @@ footer a{color:var(--stem)}
   <!-- ============ LANDING ============ -->
   <main id="viewLanding">
     <section class="hero">
-      <p class="eyebrow">Personsöktjänster · Sverige</p>
-      <h1 class="hero-line">Du kan inte kräva att bli raderad.</h1>
-      <p class="hero-line hero-line-turn">Du kan be. Och sedan be igen.</p>
-      <p class="hero-sub">Ratsit, Hitta och de andra har utgivningsbevis. Grundlagsskyddet gör att GDPR:s raderingsrätt inte biter på dem. Men de tar emot en begäran om att döljas — och den gör Förgätmigej åt dig, hos en sajt i taget.</p>
+      <p class="eyebrow">Integritet · Personsöktjänster i Sverige</p>
+      <h1 class="hero-line">Begär att bli borttagen.</h1>
+      <p class="hero-line hero-line-turn">Och ta tillbaka din integritet.</p>
+      <p class="hero-sub">Din adress, ditt telefonnummer och din inkomst ligger öppet hos Ratsit, Hitta och fyra sajter till. Vem som helst kan slå upp dig på tio sekunder. Förgätmigej begär bort dig från allihop — du väljer sajterna, vi sköter formulären.</p>
 
       <div class="cta-row">
-        <button class="btn" id="startBtn">Ta bort mina uppgifter</button>
+        <button class="btn" id="startBtn">Begär att bli borttagen</button>
         <span class="cta-fine">Gratis. Inget konto. Vi frågar aldrig efter ditt personnummer.</span>
       </div>
+    </section>
+
+    <section class="exposed">
+      <h2>Det här kan vem som helst slå upp om dig</h2>
+      <p class="lead">Utan att logga in, utan att betala och utan att du får veta att någon gjort det. Sajterna hämtar uppgifterna ur offentliga register och publicerar dem samlat, sökbara på ditt namn.</p>
+      <ul>
+        <li><span class="dot" aria-hidden="true"></span>Din hemadress</li>
+        <li><span class="dot" aria-hidden="true"></span>Ditt telefonnummer</li>
+        <li><span class="dot" aria-hidden="true"></span>Din ålder och födelsedag</li>
+        <li><span class="dot" aria-hidden="true"></span>Din taxerade inkomst</li>
+        <li><span class="dot" aria-hidden="true"></span>Vilka du är folkbokförd med</li>
+        <li><span class="dot" aria-hidden="true"></span>Karta över var du bor</li>
+      </ul>
     </section>
 
     <section class="how">
       <div class="how-step">
         <span class="how-num">01</span>
-        <h3>Du väljer sajterna</h3>
-        <p>Kryssa i var du vill bort ifrån. Alla är förvalda från början — kryssa bort dem du vill vara kvar på.</p>
+        <h3>Välj sajterna</h3>
+        <p>Alla sex är förvalda. Kryssa bort dem du vill vara kvar på — resten begär vi bort dig från.</p>
       </div>
       <div class="how-step">
         <span class="how-num">02</span>
-        <h3>Vi gör begäran</h3>
-        <p>Kräver sajten BankID legitimerar du dig i din egen app, mot sajtens egen kod. Formuläret fylls i bakom kulisserna åt dig.</p>
+        <h3>Vi skickar begäran</h3>
+        <p>En sajt i taget, utan att du behöver lära dig sex olika formulär. Kräver sajten BankID legitimerar du dig i din egen app, mot sajtens egen kod.</p>
       </div>
       <div class="how-step">
         <span class="how-num">03</span>
-        <h3>Du får en kvittens</h3>
-        <p>En lista på vad som skickats. Dyker du upp igen — och det händer — är det bara att begära borttagning en gång till.</p>
+        <h3>Du får kvittens</h3>
+        <p>Svart på vitt vilka som fått din begäran. Dyker du upp igen — och det gör du förr eller senare — begär du bort dig på nytt med en knapp.</p>
+      </div>
+    </section>
+
+    <section class="how">
+      <div class="how-step">
+        <span class="how-num">Varför ”begär” och inte ”kräv”</span>
+        <h3>Sajterna lutar sig mot grundlagen</h3>
+        <p>De har utgivningsbevis och hävdar skydd enligt yttrandefrihetsgrundlagen. Därför är det en begäran, inte ett krav — men den fungerar, och den går att göra om.</p>
+      </div>
+      <div class="how-step">
+        <span class="how-num">Vad vi aldrig frågar om</span>
+        <h3>Ditt personnummer stannar hos dig</h3>
+        <p>Fyra av sex sajter behöver noll uppgifter från dig: BankID identifierar dig direkt hos dem. Vi ser aldrig numret och sparar det aldrig.</p>
+      </div>
+      <div class="how-step">
+        <span class="how-num">Vad du får ut</span>
+        <h3>Borta ur sökresultaten</h3>
+        <p>Uppgifterna blir osökbara publikt och försvinner ur Google. De raderas inte ur sajternas register — det kan ingen tvinga fram i dag.</p>
       </div>
     </section>
   </main>
