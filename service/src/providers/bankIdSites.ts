@@ -42,9 +42,11 @@ export const hitta: RemovalProvider = bankIdProvider({
   id: "hitta",
   name: "Hitta.se",
   summary: "Uppgifterna döljs i sajtens sök. Raderas inte ur källregistret.",
+  // OVERIFIERAD, som alla tal här. Hitta.se anger ingen giltighetstid publikt
+  // (kontrollerat mot hitta.se/din-integritet 2026-08-14).
   validForDays: 1095,
   config: draft("Hitta.se", "https://www.hitta.se"),
-  caveat: "Spärren uppges gälla i tre år och måste sedan förnyas.",
+  caveat: "Hur länge spärren gäller säger Hitta.se inte öppet, så sök på dig själv då och då.",
 });
 
 export const merinfo: RemovalProvider = bankIdProvider({
@@ -53,7 +55,7 @@ export const merinfo: RemovalProvider = bankIdProvider({
   summary: "Uppgifterna döljs inom några dagar.",
   validForDays: null,
   config: draft("Merinfo", "https://www.merinfo.se"),
-  caveat: "Giltighetstiden är inte offentligt angiven — vi påminner ändå.",
+  caveat: "Giltighetstiden är inte offentligt angiven, så sök på dig själv då och då.",
 });
 
 export const eniro: RemovalProvider = bankIdProvider({
@@ -62,5 +64,5 @@ export const eniro: RemovalProvider = bankIdProvider({
   summary: "Begäran om borttagning görs via uppdateringssidan.",
   validForDays: null,
   config: draft("Eniro", "https://www.eniro.se"),
-  caveat: "Giltighetstiden är inte offentligt angiven — vi påminner ändå.",
+  caveat: "Giltighetstiden är inte offentligt angiven, så sök på dig själv då och då.",
 });

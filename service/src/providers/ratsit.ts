@@ -40,7 +40,7 @@ const config: BankIdFlowConfig = {
   manualInstructions: [
     "Öppna ratsit.se/tabort.",
     "Klicka på Ta bort dig från Ratsit och identifiera dig med BankID.",
-    "Kom tillbaka hit och markera steget som gjort, så startar nedräkningen på tolv månader.",
+    "Kom tillbaka hit och markera steget som gjort.",
   ],
 };
 
@@ -48,7 +48,10 @@ export const ratsit: RemovalProvider = bankIdProvider({
   id: "ratsit",
   name: "Ratsit",
   summary: "Hela den publika profilen döljs och försvinner ur Googles resultat.",
+  // OVERIFIERAD. Talet kommer från SITES i den statiska sajten. Kontrollerat
+  // 2026-08-14 mot Ratsits egna sidor: de anger ingen giltighetstid publikt.
+  // Visa det aldrig som ett löfte i UI:t — se caveat nedan.
   validForDays: 365,
   config,
-  caveat: "Spärren gäller i tolv månader och måste sedan göras om.",
+  caveat: "Hur länge spärren gäller säger Ratsit inte öppet, så sök på dig själv då och då.",
 });

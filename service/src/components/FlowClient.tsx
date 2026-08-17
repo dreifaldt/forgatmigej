@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import type { RequestView } from "@/core/view";
+import { DonePanel } from "./DonePanel";
 import { FieldRequest } from "./FieldRequest";
 import { IdentifyModal } from "./IdentifyModal";
 import { StatusCard } from "./StatusCard";
@@ -60,15 +61,25 @@ export function FlowClient({ initial }: { initial: RequestView }) {
         <span className="text-xs uppercase tracking-[0.14em] text-stem">Din borttagning</span>
       </header>
 
-      <section className="pt-14">
-        <h1 className="font-serif text-[clamp(28px,5vw,44px)] leading-tight font-light">
-          {asking ? "Vi behöver något av dig" : "Din borttagning"}
-        </h1>
-        <p className="mt-4 text-stem">
-          {view.summary.total} tjänster · {view.summary.done} klara · {view.summary.waiting} pågår ·{" "}
-          {view.summary.manual} behöver din hjälp
-        </p>
-      </section>
+      {view.complete ? (
+        <section className="pt-14">
+          <DonePanel
+            requestId={view.id}
+            providerIds={view.providers.map((p) => p.id)}
+            providerNames={view.providers.map((p) => p.name)}
+          />
+        </section>
+      ) : (
+        <section className="pt-14">
+          <h1 className="font-serif text-[clamp(28px,5vw,44px)] leading-tight font-light">
+            {asking ? "Vi behöver något av dig" : "Din borttagning"}
+          </h1>
+          <p className="mt-4 text-stem">
+            {view.summary.total} tjänster · {view.summary.done} klara · {view.summary.waiting}{" "}
+            pågår · {view.summary.manual} behöver din hjälp
+          </p>
+        </section>
+      )}
 
       {asking && (
         <section className="pt-10">

@@ -73,6 +73,24 @@ describe("hela flödet", () => {
     expect(view.receipts).toHaveLength(0);
   });
 
+  it("är inte klar förrän varje vald tjänst har fått sin begäran", async () => {
+    const request = store.create(["ratsit", "hitta"]);
+    await advanceAll(request);
+    expect(toView(request).complete).toBe(false);
+
+    // En av två klar räcker inte — slutskärmen skulle ljuga.
+    confirmUserAction(request, "ratsit");
+    await advanceAll(request);
+    expect(toView(request).summary.done).toBe(1);
+    expect(toView(request).complete).toBe(false);
+
+    confirmUserAction(request, "hitta");
+    await advanceAll(request);
+    const view = toView(request);
+    expect(view.summary.done).toBe(2);
+    expect(view.complete).toBe(true);
+  });
+
   it("raderar allt när begäran tas bort", async () => {
     const request = store.create(["upplysning"]);
     await advanceAll(request);

@@ -11,6 +11,11 @@ export interface RequestView {
   pendingFields: PendingFieldView[];
   receipts: { fieldId: string; providerName: string; reason: string }[];
   summary: { total: number; done: number; waiting: number; manual: number };
+  /**
+   * Alla valda tjänster har fått sin begäran och ingenting väntar längre på oss
+   * eller på användaren. Det är först då slutskärmen är sann.
+   */
+  complete: boolean;
 }
 
 export interface ProviderView {
@@ -105,5 +110,6 @@ export function toView(request: RemovalRequest): RequestView {
       reason: r.reason,
     })),
     summary: { total: providers.length, done, waiting, manual },
+    complete: providers.length > 0 && done === providers.length,
   };
 }
