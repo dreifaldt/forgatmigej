@@ -127,13 +127,25 @@ export const SITES: readonly Site[] = [
   {
     id: "merinfo",
     name: "Merinfo",
-    url: "https://www.merinfo.se",
-    does: "Uppgifterna döljs inom några dagar.",
-    note: "Giltighetstid inte offentligt angiven.",
-    bankId: true,
-    route: "window",
-    steps: [],
-    verified: false,
+    url: "https://www.merinfo.se/om",
+    does: "Dina personuppgifter tas bort efter att du mejlat dem.",
+    // Deras egen avgränsning, värd att säga i förväg: driver användaren
+    // enskild firma ligger de uppgifterna kvar oavsett vad hon begär.
+    note: "Företagsuppgifter tas inte bort — de skyddas av tryckfrihetsförordningen och yttrandefrihetsgrundlagen.",
+    bankId: false,
+    route: "email",
+    email: {
+      to: "info@merinfo.se",
+      subject: "Begäran om borttagning av mina personuppgifter",
+    },
+    steps: [
+      "Sök upp dig själv på Merinfo och kopiera adressen till din egen sida.",
+      "Klistra in länken nedan — den pekar ut rätt post utan personnummer.",
+      "Vi skriver mejlet. Du skickar det från din egen adress, så att de ser att det är du.",
+    ],
+    verified: true,
+    source:
+      "Från merinfo.se/om 2026-08-17 (text tillhandahållen av Erik; sidan svarar 403 härifrån). Deras ord: ”Om du vill ta bort dina uppgifter eller har frågor om detta, vänligen kontakta oss via e-post på info@merinfo.se.”",
   },
   {
     id: "eniro",
