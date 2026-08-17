@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { path } from "../lib/paths";
 
 interface Props {
   title: string;
@@ -16,7 +17,7 @@ const { title, description = "" } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={path("favicon.svg")} type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import Mark from "../components/Mark.svelte";
+import { path } from "../lib/paths";
 
 /**
  * Landningssidan. Ingen interaktion alls — därför inga öar och ingen JavaScript.
@@ -58,7 +59,7 @@ const promises = [
 >
   <div class="mx-auto max-w-[940px] px-6">
     <header class="flex items-center justify-between pt-6">
-      <a href="/" class="flex items-center gap-2.5">
+      <a href={path("")} class="flex items-center gap-2.5">
         <Mark size={22} />
         <span class="font-serif text-xl font-medium">Förgätmigej</span>
       </a>
@@ -87,7 +88,7 @@ const promises = [
 
       <div class="mt-10 flex flex-wrap items-center gap-5">
         <a
-          href="/ta-bort"
+          href={path("ta-bort")}
           class="rounded-full bg-blue-deep px-6 py-3.5 font-medium text-ring transition hover:bg-blue-hover"
         >
           Begär att bli borttagen

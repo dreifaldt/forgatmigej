@@ -1,15 +1,12 @@
 name: Publicera till GitHub Pages
 
+# Astro-appen i web/ byggs till statiska filer och publiceras. Det kräver ingen
+# server — appen har ingen server-sida — och därför ingen betald hosting.
 on:
   push:
     branches: [main]
     paths:
-      - index.html
-      - brand.html
-      - 404.html
-      - assets/**
-      - CNAME
-      - .nojekyll
+      - web/**
       - .github/workflows/deploy-pages.yml
   workflow_dispatch:
 
@@ -28,24 +25,39 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    defaults:
+      run:
+        working-directory: web
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
-      # Bara roten publiceras — service/ är en egen app som inte ska ut på Pages än.
-      - name: Samla sidans filer
-        run: |
-          mkdir _site
-          cp index.html brand.html 404.html CNAME .nojekyll _site/
-          cp -r assets _site/assets
+      - name: Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Installera
+        run: npm ci
+
+      - name: Bygg
+        run: npm run build
+
+      # Utan .nojekyll filtrerar Jekyll bort allt som börjar med _, och Astro
+      # lägger hela sin bundle i _astro/. Sidan hade blivit ostilad utan att
+      # bygget klagade.
+      - name: Stäng av Jekyll
+        run: touch dist/.nojekyll
 
       - name: Konfigurera Pages
         uses: actions/configure-pages@v5
 
       - name: Ladda upp artefakt
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
-          path: _site
+          path: web/dist
 
       - name: Publicera
         id: deployment

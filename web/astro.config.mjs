@@ -1,19 +1,30 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import svelte from "@astrojs/svelte";
-import node from "@astrojs/node";
 import tailwindcss from "@tailwindcss/vite";
 
 /**
- * Server-renderad av ett skäl: tjänsten behöver en Node-process.
+ * Statisk utdata, och det är inte en kompromiss.
  *
- * Den statiska sajten kunde aldrig göra det som produkten lovar — ett urval som
- * överlever, ett tillstånd per begäran, och senare utskick. Därför node-adaptern
- * och därför inget GitHub Pages: Pages serverar filer, inte en server.
+ * Appen har noll server-sida: inga API-rutter, ingen Astro.request, inga cookies.
+ * Hela flödet — urval, kö, kvittens — lever i webbläsarens minne. Så länge det är
+ * sant behövs ingen Node-process, och då ska vi inte betala för en.
+ *
+ * Konfigurationen stod på `output: "server"` med node-adaptern från när planen var
+ * att skrapa tjänsternas sidor. Den planen föll på Cloudflares botskydd; kravet på
+ * en server föll med den.
+ *
+ * Kommer riktig serverlogik tillbaka (utskick av e-post, ett tillstånd som
+ * överlever omstart) är det här första filen att ändra — och då behövs ett riktigt
+ * Node-hem igen.
+ *
+ * BASE: sajten serveras på dreifaldt.github.io/forgatmigej/, inte på en rot.
+ * Står forgatmigej.dreifaldt.com en dag i DNS blir base "/" och CNAME läggs
+ * tillbaka i artefakten. I dag pekar domänen ingenstans.
  */
 export default defineConfig({
-  output: "server",
-  adapter: node({ mode: "standalone" }),
+  site: "https://dreifaldt.github.io",
+  base: "/forgatmigej",
   integrations: [svelte()],
   vite: { plugins: [tailwindcss()] },
 });
