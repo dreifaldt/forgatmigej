@@ -117,7 +117,19 @@
     </div>
   </section>
 {:else if stage === "run" && current}
-  <RemovalLauncher site={current} onback={restart} ondone={next} />
+  <!-- #key monterar om launchern för varje sajt. Utan den lever `opened` och
+       `blocked` kvar från föregående sajt, och nästa i kön öppnar med ett
+       felmeddelande om ett fönster användaren aldrig försökt öppna. -->
+  {#key current.id}
+    <RemovalLauncher
+      site={current}
+      queue={chosen}
+      {index}
+      {completed}
+      onback={restart}
+      ondone={next}
+    />
+  {/key}
 {:else}
   <section class="mx-auto w-full max-w-[560px] px-5 py-14">
     <p class="text-xs tracking-[0.16em] text-stem uppercase">Klart</p>

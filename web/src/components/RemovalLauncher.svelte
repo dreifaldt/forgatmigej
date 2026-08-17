@@ -1,5 +1,6 @@
 <script lang="ts">
   import Mark from "./Mark.svelte";
+  import Stepper from "./Stepper.svelte";
   import type { Site } from "../lib/sites";
 
   /**
@@ -17,10 +18,17 @@
    */
   let {
     site,
+    queue,
+    index,
+    completed,
     onback,
     ondone,
   }: {
     site: Site;
+    /** Hela kön, så att stegvisaren kan visa vad som är gjort och vad som står på tur. */
+    queue: readonly Site[];
+    index: number;
+    completed: readonly string[];
     onback: () => void;
     ondone: () => void;
   } = $props();
@@ -30,6 +38,13 @@
 
   /** Vad användaren ska se i adressfältet. Härlett, aldrig hårdkodat per sajt. */
   const origin = $derived(new URL(site.url).origin);
+
+  /**
+   * Igång = fönstret öppnades ELLER blockerades. Blockeras det tar användaren
+   * länken i stället, och då måste hon fortfarande kunna säga att hon är klar.
+   * Utan `|| blocked` blir den vägen en återvändsgränd.
+   */
+  const started = $derived(opened || blocked);
 
   function open() {
     blocked = false;
@@ -70,8 +85,12 @@
   </div>
   <p class="mt-4 font-serif text-xl">Förgätmigej</p>
 
+  <div class="mt-8 w-full">
+    <Stepper {queue} {index} {completed} />
+  </div>
+
   <section
-    class="mt-7 w-full rounded-3xl border border-[var(--color-line)] bg-surface p-8 shadow-[0_1px_2px_rgba(28,36,32,0.04)]"
+    class="mt-6 w-full rounded-3xl border border-[var(--color-line)] bg-surface p-8 shadow-[0_1px_2px_rgba(28,36,32,0.04)]"
   >
     <p class="text-xs tracking-[0.16em] text-stem uppercase">Du tas bort från</p>
     <h1 class="mt-1 font-serif text-3xl font-light">{site.name}</h1>
@@ -102,7 +121,7 @@
       </p>
     {/if}
 
-    {#if !opened}
+    {#if !started}
       <button
         type="button"
         onclick={open}
@@ -111,12 +130,28 @@
         Öppna {site.name} i eget fönster
       </button>
     {:else}
-      <div class="mt-7 rounded-2xl bg-ground p-4" aria-live="polite">
-        <p class="text-sm font-medium">Fönstret är öppet</p>
-        <p class="mt-1 text-sm text-stem">
-          Gör stegen ovan i {site.name}s fönster och kom tillbaka hit när du är klar.
-        </p>
-      </div>
+      {#if opened}
+        <div class="mt-7 rounded-2xl bg-ground p-4" aria-live="polite">
+          <p class="text-sm font-medium">Fönstret är öppet</p>
+          <p class="mt-1 text-sm text-stem">
+            Gör stegen ovan i {site.name}s fönster och kom tillbaka hit när du är klar.
+          </p>
+        </div>
+      {:else}
+        <div class="mt-7 rounded-2xl bg-ground p-4" aria-live="assertive">
+          <p class="text-sm font-medium">Webbläsaren stoppade fönstret</p>
+          <p class="mt-1 text-sm text-stem">
+            Tillåt popup-fönster för den här sidan, eller
+            <a
+              href={site.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-blue-deep underline underline-offset-2"
+              >öppna {site.name} i en ny flik</a
+            >. Kom tillbaka hit när du är klar.
+          </p>
+        </div>
+      {/if}
 
       <div class="mt-4 flex flex-wrap gap-3">
         <button
@@ -131,21 +166,9 @@
           onclick={open}
           class="rounded-full border border-[var(--color-line)] px-5 py-3 text-sm transition hover:bg-ground"
         >
-          Öppna igen
+          Försök igen
         </button>
       </div>
-    {/if}
-
-    {#if blocked}
-      <p class="mt-4 rounded-2xl bg-ground p-4 text-sm" aria-live="assertive">
-        Webbläsaren stoppade fönstret. Tillåt popup-fönster för den här sidan, eller
-        <a
-          href={site.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-blue-deep underline underline-offset-2">öppna {site.name} i en ny flik</a
-        >.
-      </p>
     {/if}
 
     <!-- Det här stycket är inte dekoration. En användare som lärt sig legitimera sig
