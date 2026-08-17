@@ -1,0 +1,163 @@
+---
+import Base from "../layouts/Base.astro";
+import Mark from "../components/Mark.svelte";
+
+/**
+ * Landningssidan. Ingen interaktion alls — därför inga öar och ingen JavaScript.
+ * Det är den här sortens sida Astro finns för.
+ */
+const exposed = [
+  "Din hemadress",
+  "Ditt telefonnummer",
+  "Din ålder och födelsedag",
+  "Din taxerade inkomst",
+  "Vilka du är folkbokförd med",
+  "Karta över var du bor",
+];
+
+const steps = [
+  {
+    n: "01",
+    title: "Välj sajterna",
+    body: "Kryssa i var du vill bort ifrån. Vi tar en i taget, i den ordning du valt.",
+  },
+  {
+    n: "02",
+    title: "Vi öppnar och guidar",
+    body: "Sajtens egen sida öppnas i ett eget fönster. Vi står kvar med stegen bredvid — vilken ruta som ska kryssas i och vilken knapp som gäller.",
+  },
+  {
+    n: "03",
+    title: "Du får kvittens",
+    body: "Svart på vitt vilka som fått din begäran. Dyker du upp igen — och det gör du förr eller senare — gör du om det.",
+  },
+];
+
+const promises = [
+  {
+    label: "Varför ”begär” och inte ”kräv”",
+    title: "Sajterna lutar sig mot grundlagen",
+    body: "De har utgivningsbevis och hävdar skydd enligt yttrandefrihetsgrundlagen. Därför är det en begäran, inte ett krav — men den fungerar, och den går att göra om.",
+  },
+  {
+    label: "Vad vi aldrig frågar om",
+    title: "Ditt personnummer stannar hos dig",
+    body: "Kräver sajten BankID legitimerar du dig på deras egen sida, i din egen app. Vi ser aldrig numret och sparar det aldrig.",
+  },
+  {
+    label: "Vad du får ut",
+    title: "Borta ur sökresultaten",
+    body: "Uppgifterna blir osökbara publikt och försvinner ur Google. De raderas inte ur sajternas register — det kan ingen tvinga fram i dag.",
+  },
+];
+---
+
+<Base
+  title="Förgätmigej — begär att bli borttagen från personsöktjänsterna"
+  description="Din adress, ditt telefonnummer och din inkomst ligger öppet hos svenska personsöktjänster. Begär att bli borttagen från allihop. Gratis, inget konto, aldrig ditt personnummer."
+>
+  <div class="mx-auto max-w-[940px] px-6">
+    <header class="flex items-center justify-between pt-6">
+      <a href="/" class="flex items-center gap-2.5">
+        <Mark size={22} />
+        <span class="font-serif text-xl font-medium">Förgätmigej</span>
+      </a>
+      <span class="text-xs tracking-[0.14em] text-stem uppercase">Gratis · MVP</span>
+    </header>
+
+    <section class="max-w-[680px] pt-[76px]">
+      <p class="text-xs tracking-[0.16em] text-stem uppercase">
+        Integritet · Personsöktjänster i Sverige
+      </p>
+      <h1
+        class="mt-7 font-serif text-[clamp(33px,6.2vw,56px)] leading-[1.08] font-light tracking-[-0.015em]"
+      >
+        Begär att bli borttagen.
+      </h1>
+      <p
+        class="mt-1.5 font-serif text-[clamp(33px,6.2vw,56px)] leading-[1.08] font-normal tracking-[-0.015em] text-blue-deep italic"
+      >
+        Och ta tillbaka din integritet.
+      </p>
+      <p class="mt-7 max-w-[46ch] text-stem">
+        Din adress, ditt telefonnummer och din inkomst ligger öppet hos Ratsit, Hitta och
+        fyra sajter till. Vem som helst kan slå upp dig på tio sekunder. Förgätmigej tar dig
+        igenom borttagningen — en sajt i taget, med stegen framför dig.
+      </p>
+
+      <div class="mt-10 flex flex-wrap items-center gap-5">
+        <a
+          href="/ta-bort"
+          class="rounded-full bg-blue-deep px-6 py-3.5 font-medium text-ring transition hover:bg-blue-hover"
+        >
+          Begär att bli borttagen
+        </a>
+        <span class="text-[13.5px] text-stem">
+          Gratis. Inget konto. Vi frågar aldrig efter ditt personnummer.
+        </span>
+      </div>
+    </section>
+
+    <section class="mt-[76px] rounded-3xl border border-[var(--color-line)] bg-surface p-8">
+      <h2 class="font-serif text-[clamp(22px,3.4vw,27px)] font-normal tracking-[-0.01em]">
+        Det här kan vem som helst slå upp om dig
+      </h2>
+      <p class="mt-2 max-w-[58ch] text-[15px] text-stem">
+        Utan att logga in, utan att betala och utan att du får veta att någon gjort det.
+        Sajterna hämtar uppgifterna ur offentliga register och publicerar dem samlat,
+        sökbara på ditt namn.
+      </p>
+      <ul class="mt-6 grid gap-x-7 gap-y-3 sm:grid-cols-2">
+        {
+          exposed.map((item) => (
+            <li class="flex items-center gap-3 text-[15.5px]">
+              {/* Ögat som markör — liten yta, aldrig text. Regel 2. */}
+              <span class="h-[9px] w-[9px] flex-none rounded-full bg-eye" aria-hidden="true" />
+              {item}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section
+      class="mt-[76px] grid gap-7 border-t border-[var(--color-line)] pt-8 md:grid-cols-3"
+    >
+      {
+        steps.map((step) => (
+          <div>
+            <span class="block font-serif text-[13px] text-blue-deep">{step.n}</span>
+            <h3 class="mt-1 text-[15px] font-semibold">{step.title}</h3>
+            <p class="mt-1.5 text-[14.5px] leading-relaxed text-stem">{step.body}</p>
+          </div>
+        ))
+      }
+    </section>
+
+    <section
+      class="mt-[76px] grid gap-7 border-t border-[var(--color-line)] pt-8 md:grid-cols-3"
+    >
+      {
+        promises.map((item) => (
+          <div>
+            <span class="block font-serif text-[13px] text-blue-deep">{item.label}</span>
+            <h3 class="mt-1 text-[15px] font-semibold">{item.title}</h3>
+            <p class="mt-1.5 text-[14.5px] leading-relaxed text-stem">{item.body}</p>
+          </div>
+        ))
+      }
+    </section>
+
+    <footer
+      class="mt-[86px] mb-10 flex flex-wrap justify-between gap-4 border-t border-[var(--color-line)] pt-6 text-[13px] text-stem"
+    >
+      <span>
+        Förgätmigej — <a
+          class="underline underline-offset-2"
+          href="mailto:erik@dreifaldt.com?subject=Feedback%20p%C3%A5%20F%C3%B6rg%C3%A4tmigej">hör av dig</a
+        >
+      </span>
+      <span>Prototyp. Inget sparas när du stänger fliken.</span>
+    </footer>
+  </div>
+</Base>

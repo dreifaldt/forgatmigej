@@ -1,0 +1,14 @@
+---
+import Base from "../layouts/Base.astro";
+import Flow from "../components/Flow.svelte";
+import { SITES } from "../lib/sites";
+---
+
+<Base
+  title="Begär att bli borttagen — Förgätmigej"
+  description="Välj sajterna du vill bort ifrån. Vi öppnar en i taget och guidar dig igenom."
+>
+  <!-- client:load: hela sidan är interaktionen. Det finns inget att visa innan
+       JavaScript kommit fram, så det vore ingen vinst att skjuta upp den. -->
+  <Flow sites={SITES} client:load />
+</Base>

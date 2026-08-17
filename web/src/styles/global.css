@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Paletten är hämtad ur Myosotis sylvatica och är bindande.
+   Detta är appens enda ställe där färgvärden får definieras.
+
+   Reglerna gäller oförändrat:
+     1. Inga hex- eller rgb-värden utanför det här blocket.
+     2. --color-eye och --color-bud är aldrig textfärger.
+     3. --color-bud markerar exakt ett tillstånd: utgången spärr.
+        Appen har ingen nedräkning, alltså används den inte alls.
+        Lägg den inte på ett fel- eller varningsläge — det vore en
+        andra betydelse, och regeln tillåter bara en.
+     4. Gult möter blått bara med --color-ring emellan.
+     5. --color-blue-deep är den enda blå som får bära text.
+     6. Bottenfärgen är aldrig ren vit.
+   ============================================================ */
+
+@theme {
+  --color-blue-pale: #c3d3ec;
+  --color-blue: #6e93d6;
+  --color-blue-deep: #3e5fa3;
+  --color-blue-hover: #33508b;
+  --color-eye: #f0c23c;
+  --color-ring: #fbfaf3;
+  --color-bud: #c89bb6;
+  --color-leaf: #8a9a7c;
+  --color-stem: #55624c;
+  --color-ground: #edf0ea;
+  --color-surface: #f8faf5;
+  --color-ink: #1c2420;
+  --color-faded: #b0b6a9;
+  --color-line: rgba(28, 36, 32, 0.12);
+
+  --font-serif: Fraunces, Georgia, "Times New Roman", serif;
+  --font-sans: Karla, "Helvetica Neue", Arial, sans-serif;
+}
+
+html {
+  background: var(--color-ground);
+}
+
+body {
+  background: transparent;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-blue-deep);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "forgatmigej-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Förgätmigej som en app: landningssida, urval och guidade borttagningar. Astro med Svelte-öar.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/node": "^9.4.4",
+    "@astrojs/svelte": "^7.2.1",
+    "astro": "^5.16.2",
+    "svelte": "^5.42.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.14",
+    "tailwindcss": "^4.1.14",
+    "typescript": "^5.9.2"
+  }
+}
