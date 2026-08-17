@@ -62,12 +62,17 @@ platsen som behöver röras när något ändras hos sajterna.
 
 ## Publicera
 
+Ett workflow (`.github/workflows/deploy-pages.yml`) publicerar automatiskt vid varje push till
+`main` som rör en fil i roten. Engångsinställning innan det fungerar:
+
+**Settings → Pages → Source: `GitHub Actions`** (inte "Deploy from a branch").
+
 ```bash
-git push -u origin main   # fjärranslutningen är redan inlagd
+git push origin main   # fjärranslutningen är redan inlagd
 ```
 
-Sedan **Settings → Pages → Deploy from a branch → `main` / `(root)`**.
-Sajten dyker upp på `https://dreifaldt.github.io/forgatmigej/` efter en minut eller två.
+Sajten dyker upp på `https://dreifaldt.github.io/forgatmigej/` efter en minut eller två. Ändringar
+i `service/` triggar inget — workflowet lyssnar bara på filerna i roten.
 
 ### Domän
 

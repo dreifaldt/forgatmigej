@@ -14,7 +14,10 @@ Roten är oförändrad och ska förbli det. **Lägg inte till ett byggsteg i rot
 
 **Kör roten:** öppna `index.html`, eller `python3 -m http.server 8000` för rena adresser.
 **Kör tjänsten:** `cd service && npm install && npm run dev`.
-**Publicera:** `git push origin main` → GitHub Pages (`main` / root), domän `forgatmigej.dreifaldt.com`.
+**Publicera:** `git push origin main` → `.github/workflows/deploy-pages.yml` bygger och publicerar
+till GitHub Pages (triggas bara av ändringar i rotens filer, inte `service/`). Kräver att
+Settings → Pages → Source står på **GitHub Actions**, inte "Deploy from a branch". Domän
+`forgatmigej.dreifaldt.com`.
 
 ## Filer i roten
 

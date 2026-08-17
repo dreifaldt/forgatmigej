@@ -1,0 +1,52 @@
+name: Publicera till GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - index.html
+      - brand.html
+      - 404.html
+      - assets/**
+      - CNAME
+      - .nojekyll
+      - .github/workflows/deploy-pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Bara roten publiceras — service/ är en egen app som inte ska ut på Pages än.
+      - name: Samla sidans filer
+        run: |
+          mkdir _site
+          cp index.html brand.html 404.html CNAME .nojekyll _site/
+          cp -r assets _site/assets
+
+      - name: Konfigurera Pages
+        uses: actions/configure-pages@v5
+
+      - name: Ladda upp artefakt
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Publicera
+        id: deployment
+        uses: actions/deploy-pages@v4
