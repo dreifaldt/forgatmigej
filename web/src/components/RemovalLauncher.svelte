@@ -121,6 +121,12 @@
       </p>
     {/if}
 
+    {#if site.source}
+      <!-- Datumet är hela poängen: rutinerna ändras utan förvarning, och en
+           instruktion utan ålder går inte att bedöma. -->
+      <p class="mt-4 text-[12.5px] leading-relaxed text-stem">{site.source}</p>
+    {/if}
+
     {#if !started}
       <button
         type="button"

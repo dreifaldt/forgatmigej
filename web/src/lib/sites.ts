@@ -23,6 +23,14 @@ export interface Site {
   readonly steps: readonly string[];
   /** Har någon läst av sajtens faktiska sida? Styr hur säkert vi formulerar oss. */
   readonly verified: boolean;
+  /**
+   * Var stegen är lästa, och när. Obligatoriskt så fort `verified` är sant.
+   *
+   * Finns för att nästa person ska kunna se skillnad på "avläst mot skarp sida"
+   * och "någon mindes hur det brukade se ut". Rutinerna ändras utan förvarning,
+   * och ett datum är det enda som avslöjar när en instruktion har surnat.
+   */
+  readonly source?: string;
 }
 
 export const SITES: readonly Site[] = [
@@ -41,16 +49,28 @@ export const SITES: readonly Site[] = [
       "Legitimera dig med BankID i din egen app.",
     ],
     verified: true,
+    source: "Avläst ur sidans markup 2026-08-17 (label.ratsit-checkbox, knappen disabled tills den är i).",
   },
   {
     id: "hitta",
     name: "Hitta.se",
-    url: "https://www.hitta.se",
-    does: "Uppgifterna döljs i sajtens sök.",
-    note: "Raderas inte ur källregistret. Spärren måste förnyas.",
-    bankId: true,
-    steps: [],
-    verified: false,
+    // Deras egen integritetssida. Det är där rutinen står — startsidan säger inget.
+    url: "https://www.hitta.se/din-integritet",
+    does: "Uppgifterna döljs ur söket, men först efter att de gått med på det.",
+    note: "De nekar radering och hänvisar till utgivningsbeviset. Be om att döljas, inte raderas.",
+    // Ingen BankID-legitimering är dokumenterad i deras policy — rutinen är att
+    // kontakta dem. Att policyn inte nämner BankID bevisar dock inte att det
+    // saknas ett självbetjäningsformulär vi inte kommit åt. Därför false, inte
+    // "verifierat frånvarande".
+    bankId: false,
+    steps: [
+      "Gå till avsnitt 7, ”Dina rättigheter”, längst ner på deras integritetssida.",
+      "Kontakta dem på vägen som anges där och begär att dina uppgifter döljs ur söktjänsten.",
+      "Skriv ”dölj”, inte ”radera”. De svarar att GDPR inte gäller dem och att de inte är skyldiga att radera — men de döljer uppgifter efter överenskommelse.",
+    ],
+    verified: true,
+    source:
+      "Läst ur hitta.se/din-integritet 2026-08-17, avsnitt 7: ”Vi kan enligt överenskommelse med dig i stället dölja vissa av dina uppgifter från vår söktjänst.” Policyn daterad 2024-09-16.",
   },
   {
     id: "mrkoll",
