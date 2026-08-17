@@ -164,6 +164,20 @@
       </p>
     </div>
 
+    <!-- Hitta.se säger det själva, och de säger uttryckligen "och andra liknande
+         tjänster". Det är enda åtgärden på den här sidan som angriper orsaken i
+         stället för symptomet — därför står den för sig, inte i en punktlista. -->
+    <div class="mt-6 rounded-2xl bg-surface p-5">
+      <h3 class="font-serif text-lg">Gör det här också, annars kommer de tillbaka</h3>
+      <p class="mt-2 text-[15px] text-stem">
+        Be din teleoperatör dölja ditt nummer i nummerupplysningen. Så länge det ligger
+        öppet där hämtar sajterna hem det igen — Hitta.se skriver rakt ut att uppgifterna
+        annars ”riskerar att återpubliceras på hitta.se och andra liknande tjänster”. Det är
+        ett samtal till din operatör, och det är den enda åtgärden här som tar bort orsaken
+        i stället för symptomet.
+      </p>
+    </div>
+
     <button
       type="button"
       onclick={restart}

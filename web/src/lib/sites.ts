@@ -90,19 +90,19 @@ export const SITES: readonly Site[] = [
   {
     id: "hitta",
     name: "Hitta.se",
-    url: "https://www.hitta.se/din-integritet",
-    does: "Uppgifterna döljs ur söket, men först efter att de gått med på det.",
-    note: "De nekar radering och hänvisar till utgivningsbeviset. Be om att döljas, inte raderas.",
+    url: "https://www.hitta.se/kontakta-oss/ta-bort-kontaktsida",
+    does: "Din kontaktsida tas bort ur söket, direkt via deras eget formulär.",
+    note: "Uppgifterna raderas inte ur deras register — och återpubliceras om ditt nummer ligger öppet hos teleoperatören.",
     bankId: false,
     route: "window",
     steps: [
-      "Gå till avsnitt 7, ”Dina rättigheter”, längst ner på deras integritetssida.",
-      "Kontakta dem på vägen som anges där och begär att dina uppgifter döljs ur söktjänsten.",
-      "Skriv ”dölj”, inte ”radera”. De svarar att GDPR inte gäller dem och att de inte är skyldiga att radera — men de döljer uppgifter efter överenskommelse.",
+      "Sök fram dig själv i rutan — namn eller telefonnummer fungerar.",
+      "Klicka på ”Ta bort” vid din kontaktsida.",
+      "Gör även ditt nummer hemligt hos din teleoperatör. Annars återpubliceras uppgifterna, med deras egna ord.",
     ],
     verified: true,
     source:
-      "Läst ur hitta.se/din-integritet 2026-08-17, avsnitt 7. Obs: det ryktas om en egen ”ta bort”-sida med BankID, men den gick inte att hitta — åtta gissade adresser gav 404 och deras policy nämner den inte. Hittar du den är den troligen snabbare än kontaktvägen ovan.",
+      "Avläst direkt från hitta.se/kontakta-oss/ta-bort-kontaktsida 2026-08-17 (HTTP 200). Deras varning ordagrant: ”Tänk på att även göra ditt telefonnummer hemligt hos din teleoperatör. Annars riskerar uppgifter att återpubliceras på hitta.se och andra liknande tjänster.”",
   },
   {
     id: "mrkoll",
