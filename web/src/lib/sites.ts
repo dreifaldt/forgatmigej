@@ -138,15 +138,22 @@ export const SITES: readonly Site[] = [
   {
     id: "eniro",
     name: "Eniro",
-    // Adressen angiven av Erik 2026-08-17. Sidan svarar 403 bakom Cloudflare, så
-    // innehållet är oläst — rätt sida, men inga steg vi kan gå i god för.
     url: "https://uppdatera.eniro.se/person",
-    does: "Uppgifterna ändras eller tas bort via deras uppdateringssida.",
-    note: "Giltighetstid inte offentligt angiven.",
+    does: "Du kan se, ändra eller ta bort de uppgifter Eniro visar om dig.",
+    // Sidan är byggd för att få dig att behålla och bekräfta uppgifterna, inte
+    // ta bort dem. Den varningen hör hemma i produkten — vi skickar dit folk.
+    note: "Sidan lockar med verifieringsmärke och att ”hittas enkelt av vänner”. Borttagningen finns, men ligger inte i förgrunden.",
     bankId: true,
     route: "window",
-    steps: [],
-    verified: false,
+    steps: [
+      "Kontrollera att fliken ”Person” är vald — ”Företag” ligger bredvid.",
+      "Sök upp ditt eget namn i deras personregister.",
+      "Logga in med BankID.",
+      "Välj att ta bort uppgifterna. Låt bli ”Verifiera nu” — den bekräftar din profil i stället för att dölja den.",
+    ],
+    verified: true,
+    source:
+      "Avläst från uppdatera.eniro.se/person 2026-08-17 (skärmbild — sidan blockerar hämtning). Deras egen ordning: 1. Hitta ditt namn i Eniros personregister, 2. Logga in säkert med BankID, 3. Uppdatera och hantera dina personuppgifter.",
   },
   {
     id: "upplysning",
