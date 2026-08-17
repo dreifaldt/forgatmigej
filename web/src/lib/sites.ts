@@ -107,7 +107,11 @@ export const SITES: readonly Site[] = [
   {
     id: "mrkoll",
     name: "MrKoll",
-    url: "https://mrkoll.se",
+    // Adressen är angiven av Erik 2026-08-17. Sidans innehåll går inte att läsa:
+    // MrKoll svarar med en hård Cloudflare-blockering, inte ens en challenge.
+    // Därför rätt sida men inga steg — vi öppnar den och låter deras egen text
+    // tala. Att gissa vad som står där vore att hitta på.
+    url: "https://mrkoll.se/om/andra-uppgifter/",
     does: "Oftast döljs bara adress och telefonnummer — posten ligger kvar.",
     note: "Adressdöljningen är kortlivad och behöver göras om ofta.",
     bankId: false,
