@@ -1,6 +1,6 @@
 <script lang="ts">
   import RemovalLauncher from "./RemovalLauncher.svelte";
-  import type { Site } from "../lib/sites";
+  import { needsIdentity, type Identity, type Site } from "../lib/sites";
 
   /**
    * Urval → en sajt i taget → kvittens.
@@ -14,12 +14,25 @@
   // vi kan ge exakta steg för. Att förvälja sex och bara kunna guida en vore att
   // lova mer än vi håller.
   let picked = $state<string[]>(["ratsit"]);
-  let stage = $state<"pick" | "run" | "done">("pick");
+  let stage = $state<"pick" | "identity" | "run" | "done">("pick");
   let index = $state(0);
   let completed = $state<string[]>([]);
 
+  /**
+   * Skrivs en gång, används överallt. Flyktig: lever i minnet, försvinner med
+   * fliken, når aldrig en server. Utan den fick användaren skriva sitt namn på
+   * nytt för varje mejlsajt, eftersom launchern monteras om per sajt.
+   */
+  let identity = $state<Identity>({ name: "", place: "" });
+
   const chosen = $derived(sites.filter((s) => picked.includes(s.id)));
   const current = $derived(chosen[index]);
+
+  // Frågar bara när någon vald sajt faktiskt behöver veta vem hon är. Väljer hon
+  // bara Ratsit hoppas steget över helt — BankID identifierar henne där, och då
+  // har vi inget ärende till hennes namn.
+  const identityNeeded = $derived(chosen.some(needsIdentity));
+  const identityReady = $derived(identity.name.trim().length > 1);
 
   function toggle(id: string) {
     picked = picked.includes(id) ? picked.filter((p) => p !== id) : [...picked, id];
@@ -28,7 +41,7 @@
   function start() {
     index = 0;
     completed = [];
-    stage = "run";
+    stage = identityNeeded && !identityReady ? "identity" : "run";
   }
 
   function next() {
@@ -116,6 +129,71 @@
       </span>
     </div>
   </section>
+{:else if stage === "identity"}
+  <section class="mx-auto w-full max-w-[520px] px-5 py-14">
+    <p class="text-xs tracking-[0.16em] text-stem uppercase">Innan vi börjar</p>
+    <h1 class="mt-2 font-serif text-[clamp(24px,4vw,32px)] leading-tight font-light">
+      Vem ska tas bort?
+    </h1>
+    <p class="mt-3 text-stem">
+      Vi frågar en gång och återanvänder det för alla sajter du valt — du ska inte behöva
+      skriva samma sak sju gånger.
+    </p>
+
+    <div class="mt-8 grid gap-5">
+      <label class="grid gap-1.5">
+        <span class="text-sm font-medium">Ditt namn</span>
+        <span class="text-[13px] text-stem">
+          Används för att söka upp dig hos tjänsterna och för att skriva dina mejl.
+        </span>
+        <input
+          bind:value={identity.name}
+          type="text"
+          autocomplete="name"
+          placeholder="För- och efternamn"
+          class="rounded-xl border border-[var(--color-line)] bg-ring px-4 py-2.5 text-[15px]"
+        />
+      </label>
+
+      <label class="grid gap-1.5">
+        <span class="text-sm font-medium">Ort <span class="text-stem">(frivillig)</span></span>
+        <span class="text-[13px] text-stem">
+          Bara för att skilja dig från andra med samma namn i ett sökresultat. Vi frågar
+          aldrig efter gatuadress eller personnummer.
+        </span>
+        <input
+          bind:value={identity.place}
+          type="text"
+          autocomplete="address-level2"
+          placeholder="Till exempel Göteborg"
+          class="rounded-xl border border-[var(--color-line)] bg-ring px-4 py-2.5 text-[15px]"
+        />
+      </label>
+    </div>
+
+    <div class="mt-7 flex flex-wrap items-center gap-4">
+      <button
+        type="button"
+        onclick={() => (stage = "run")}
+        disabled={!identityReady}
+        class="rounded-full bg-blue-deep px-6 py-3 font-medium text-ring transition hover:bg-blue-hover disabled:opacity-40"
+      >
+        Fortsätt
+      </button>
+      <button
+        type="button"
+        onclick={() => (stage = "pick")}
+        class="text-sm text-stem underline underline-offset-4 hover:text-ink"
+      >
+        Tillbaka
+      </button>
+    </div>
+
+    <p class="mt-6 text-[12.5px] leading-relaxed text-stem">
+      Det du skriver stannar i den här fliken. Vi har ingen server att skicka det till, och
+      när du stänger fliken är det borta.
+    </p>
+  </section>
 {:else if stage === "run" && current}
   <!-- #key monterar om launchern för varje sajt. Utan den lever `opened` och
        `blocked` kvar från föregående sajt, och nästa i kön öppnar med ett
@@ -126,6 +204,7 @@
       queue={chosen}
       {index}
       {completed}
+      {identity}
       onback={restart}
       ondone={next}
     />

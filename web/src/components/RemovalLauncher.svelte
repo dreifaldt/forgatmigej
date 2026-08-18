@@ -1,7 +1,13 @@
 <script lang="ts">
   import Mark from "./Mark.svelte";
   import Stepper from "./Stepper.svelte";
-  import { buildRemovalEmail, mailtoHref, type Site } from "../lib/sites";
+  import {
+    buildRemovalEmail,
+    mailtoHref,
+    searchHref,
+    type Identity,
+    type Site,
+  } from "../lib/sites";
 
   /**
    * Startskärmen för en borttagning.
@@ -21,6 +27,7 @@
     queue,
     index,
     completed,
+    identity,
     onback,
     ondone,
   }: {
@@ -29,6 +36,8 @@
     queue: readonly Site[];
     index: number;
     completed: readonly string[];
+    /** Skriven en gång i flödet, återanvänd här. Aldrig efterfrågad per sajt. */
+    identity: Identity;
     onback: () => void;
     ondone: () => void;
   } = $props();
@@ -54,12 +63,13 @@
    * Personnummer finns inte med, och ska inte läggas till. Profillänken pekar ut
    * samma post och är mindre känslig.
    */
-  let name = $state("");
+  // Bara profillänken är per sajt — varje tjänst har sin egen. Namnet kommer
+  // uppifrån och skrivs aldrig om.
   let profileUrl = $state("");
 
-  const preview = $derived(buildRemovalEmail(site, name, profileUrl));
-  const href = $derived(mailtoHref(site, name, profileUrl));
-  const ready = $derived(name.trim().length > 1 && profileUrl.trim().length > 4);
+  const preview = $derived(buildRemovalEmail(site, identity, profileUrl));
+  const href = $derived(mailtoHref(site, identity, profileUrl));
+  const ready = $derived(identity.name.trim().length > 1 && profileUrl.trim().length > 4);
 
   function open() {
     blocked = false;
@@ -72,8 +82,12 @@
     // INGEN `noopener` i feature-strängen. Sätts den returnerar window.open alltid
     // null enligt spec, och då hade vi trott att fönstret blockerades varenda gång.
     // Vi behöver handtaget för att skilja "stoppad av webbläsaren" från "öppnad".
+    // Kan vi söka åt henne gör vi det. Annars landar hon på borttagningssidan,
+    // vilket är rätt sida men en tom sökruta.
+    const target = searchHref(site, identity);
+
     const handle = window.open(
-      site.url,
+      target,
       `fmn-${site.id}`,
       `popup=yes,width=${w},height=${h},left=${left},top=${top}`,
     );
@@ -152,17 +166,10 @@
            ett brev från oss i hennes namn hade både saknat trovärdighet och
            fastnat i skräpposten. -->
       <div class="mt-7 grid gap-4">
-        <label class="grid gap-1.5">
-          <span class="text-sm font-medium">Ditt namn</span>
-          <span class="text-[13px] text-stem">Så att de hittar rätt post.</span>
-          <input
-            bind:value={name}
-            type="text"
-            autocomplete="name"
-            placeholder="För- och efternamn"
-            class="rounded-xl border border-[var(--color-line)] bg-ring px-4 py-2.5 text-[15px]"
-          />
-        </label>
+        <p class="rounded-2xl bg-ground p-4 text-sm text-stem">
+          Mejlet skrivs åt <strong class="font-medium text-ink">{identity.name}</strong>. Vi
+          frågade om namnet en gång — du behöver inte skriva det igen.
+        </p>
 
         <label class="grid gap-1.5">
           <span class="text-sm font-medium">Länk till din sida hos {site.name}</span>

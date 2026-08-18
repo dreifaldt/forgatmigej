@@ -34,6 +34,14 @@ export interface Site {
   readonly route: "window" | "email";
   /** Bara för route: "email". Mottagare och ärenderad. */
   readonly email?: { readonly to: string; readonly subject: string };
+  /**
+   * Sökadress med `{q}` där söktermen ska in, så att vi kan öppna sajtens sök
+   * förifyllt med användarens namn i stället för att lämna henne på en tom ruta.
+   *
+   * Fylls bara i när formatet är avläst ur sajtens eget formulär. Gissade
+   * sökadresser ger 404 mitt i flödet, vilket är sämre än en vanlig länk.
+   */
+  readonly searchUrl?: string;
   readonly steps: readonly string[];
   /** Har någon läst av sajtens faktiska sida? Styr hur säkert vi formulerar oss. */
   readonly verified: boolean;
@@ -91,6 +99,9 @@ export const SITES: readonly Site[] = [
     id: "hitta",
     name: "Hitta.se",
     url: "https://www.hitta.se/kontakta-oss/ta-bort-kontaktsida",
+    // Härlett ur deras eget sökformulär på startsidan: <form action="/sök"> med
+    // fältet search-field. Avläst 2026-08-17.
+    searchUrl: "https://www.hitta.se/sök?search-field={q}",
     does: "Din kontaktsida tas bort ur söket, direkt via deras eget formulär.",
     note: "Uppgifterna raderas inte ur deras register — och återpubliceras om ditt nummer ligger öppet hos teleoperatören.",
     bankId: false,
@@ -183,6 +194,34 @@ export const SITES: readonly Site[] = [
 export const siteById = (id: string): Site | undefined => SITES.find((s) => s.id === id);
 
 /**
+ * Vem användaren är. Namn och ort, ingenting mer.
+ *
+ * FLYKTIG MED FLIT. Ligger i komponentens minne, försvinner när fliken stängs,
+ * och når aldrig en server — vi har ingen. Den finns för att hon ska slippa
+ * skriva sitt namn en gång per sajt.
+ *
+ * Ort och inte gatuadress: det räcker för att skilja henne från andra med samma
+ * namn i ett sökresultat, och är mindre känsligt. Personnummer efterfrågas
+ * aldrig, av något skäl.
+ */
+export interface Identity {
+  readonly name: string;
+  /** Ort. Frivillig — bara för att skilja lika namn åt. */
+  readonly place: string;
+}
+
+/** Behöver den här sajten veta vem användaren är? Ratsit gör inte det: BankID räcker. */
+export const needsIdentity = (site: Site): boolean =>
+  site.route === "email" || Boolean(site.searchUrl);
+
+/** Sajtens sök, förifyllt. Faller tillbaka på borttagningssidan när formatet är okänt. */
+export function searchHref(site: Site, identity: Identity): string {
+  if (!site.searchUrl || !identity.name.trim()) return site.url;
+  const q = [identity.name, identity.place].filter((p) => p.trim()).join(" ");
+  return site.searchUrl.replace("{q}", encodeURIComponent(q.trim()));
+}
+
+/**
  * Brevet användaren skickar.
  *
  * Ingen juridisk argumentation och inga paragrafhänvisningar. Sajterna har
@@ -192,27 +231,33 @@ export const siteById = (id: string): Site | undefined => SITES.find((s) => s.id
  *
  * Personnummer förekommer inte, och ska inte läggas till.
  */
-export function buildRemovalEmail(site: Site, name: string, profileUrl: string): string {
+export function buildRemovalEmail(
+  site: Site,
+  identity: Identity,
+  profileUrl: string,
+): string {
+  const name = identity.name.trim() || "[ditt namn]";
   const lines = [
     "Hej,",
     "",
     `jag begär att mina personuppgifter tas bort från ${site.name}.`,
     "",
-    `Namn: ${name || "[ditt namn]"}`,
-    `Min sida hos er: ${profileUrl || "[länk till din profil hos dem]"}`,
+    `Namn: ${name}`,
+    ...(identity.place.trim() ? [`Ort: ${identity.place.trim()}`] : []),
+    `Min sida hos er: ${profileUrl.trim() || "[länk till din profil hos dem]"}`,
     "",
     "Jag har utelämnat mitt personnummer med flit. Länken ovan pekar ut rätt post.",
     "Behöver ni något mer för att identifiera uppgifterna, hör av er så kompletterar jag.",
     "",
     "Vänliga hälsningar",
-    name || "[ditt namn]",
+    name,
   ];
   return lines.join("\n");
 }
 
 /** mailto:-adress med ärende och färdig text. Öppnas i användarens egen e-postklient. */
-export function mailtoHref(site: Site, name: string, profileUrl: string): string {
+export function mailtoHref(site: Site, identity: Identity, profileUrl: string): string {
   if (!site.email) return "";
-  const body = buildRemovalEmail(site, name, profileUrl);
+  const body = buildRemovalEmail(site, identity, profileUrl);
   return `mailto:${site.email.to}?subject=${encodeURIComponent(site.email.subject)}&body=${encodeURIComponent(body)}`;
 }
